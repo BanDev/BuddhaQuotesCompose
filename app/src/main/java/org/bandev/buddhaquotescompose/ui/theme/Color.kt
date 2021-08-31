@@ -9,5 +9,6 @@ val Teal200 = Color(0xFF03DAC5)
 val LighterBackground = Color(0xFF424242)
 val DarkerBackground = Color(0xFF383838)
 val Line = Color(0xFF262626)
+val Heart = Color(0xFFFF6347)
 
 val DarkBackground = Color(0xFF222222)

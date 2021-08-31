@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
                                             FavoriteButton(
                                                 isChecked = isLiked,
                                                 onClick = { isLiked = !isLiked },
-                                                modifier = Modifier.padding(15.dp)
+                                                modifier = Modifier.padding(10.dp)
                                             )
                                             Row(
                                                 Modifier
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                                             ) {
                                                 IconButton(
                                                     onClick = { /*TODO*/ },
-                                                    modifier = Modifier.padding(15.dp)
+                                                    modifier = Modifier.padding(10.dp)
                                                 ) {
                                                     Icon(
                                                         imageVector = Icons.Rounded.MoreHoriz,
