@@ -38,7 +38,7 @@ import org.bandev.buddhaquotescompose.items.Quote
  * @date 27/07/21
  */
 
-class ViewModel(application: Application) : AndroidViewModel(application) {
+class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repo: Repository = Repository(application)
 

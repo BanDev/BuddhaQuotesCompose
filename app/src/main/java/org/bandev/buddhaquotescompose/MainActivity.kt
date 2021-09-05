@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import com.google.accompanist.insets.ProvideWindowInsets
-import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -15,7 +14,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            BuddhaQuotesApp()
+            BuddhaQuotesApp(viewModel())
         }
     }
 }

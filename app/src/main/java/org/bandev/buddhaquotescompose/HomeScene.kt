@@ -22,88 +22,102 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
+import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
+import org.bandev.buddhaquotescompose.items.Quote
 import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
 import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 
 @Composable
-fun HomeScene(openDrawer: () -> Unit) {
-        Column {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                navigationIcon = {
-                    IconButton(onClick = { openDrawer() }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Menu,
-                            contentDescription = null
-                        )
-                    }
-                },
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.statusBars,
-                    applyStart = true,
-                    applyTop = true,
-                    applyEnd = true,
-                ),
-                backgroundColor = Color.Transparent,
-                elevation = 0.dp
-            )
-            Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    elevation = 4.dp,
-                    shape = RoundedCornerShape(11.dp),
-                    backgroundColor = LighterBackground
-                ) {
-                    Column(Modifier.padding()) {
-                        Text(
-                            text = "A good friend who points out mistakes and imperfections and rebukes evil is to be respected as if he reveals a secret of hidden treasure",
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(20.dp)
+fun HomeScene(
+    openDrawer: () -> Unit,
+    viewModel: BuddhaQuotesViewModel
+) {
+    var quote by remember {
+        mutableStateOf(Quote(1, R.string.quote_1, false))
+    }.apply { viewModel.Quotes().getRandom { value = it } }
+    var isLiked by remember { mutableStateOf(quote.liked) }
+    Column {
+        TopAppBar(
+            title = { Text(stringResource(R.string.app_name)) },
+            navigationIcon = {
+                IconButton(onClick = { openDrawer() }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Menu,
+                        contentDescription = null
+                    )
+                }
+            },
+            contentPadding = rememberInsetsPaddingValues(
+                insets = LocalWindowInsets.current.statusBars,
+                applyStart = true,
+                applyTop = true,
+                applyEnd = true,
+            ),
+            backgroundColor = Color.Transparent,
+            elevation = 0.dp
+        )
+        Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                elevation = 4.dp,
+                shape = RoundedCornerShape(11.dp),
+                backgroundColor = LighterBackground
+            ) {
+                Column(Modifier.padding()) {
+                    Text(
+                        text = stringResource(quote.resource),
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(20.dp)
+                    )
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .background(DarkerBackground)
+                    ) {
+                        FavoriteButton(
+                            isChecked = isLiked,
+                            onClick = {
+                                isLiked = !isLiked
+                                viewModel.Quotes().setLike(quote.id, isLiked)
+                                      },
+                            modifier = Modifier.padding(10.dp)
                         )
                         Row(
                             Modifier
                                 .fillMaxWidth()
-                                .wrapContentHeight()
-                                .background(DarkerBackground)
+                                .wrapContentHeight(),
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            var isLiked by remember { mutableStateOf(false) }
-                            FavoriteButton(
-                                isChecked = isLiked,
-                                onClick = { isLiked = !isLiked },
+                            IconButton(
+                                onClick = {
+                                    viewModel.Quotes().getRandom { quote = it }
+                                    isLiked = quote.liked
+                                          },
                                 modifier = Modifier.padding(10.dp)
-                            )
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight(),
-                                horizontalArrangement = Arrangement.End
                             ) {
-                                IconButton(
-                                    onClick = { /*TODO*/ },
-                                    modifier = Modifier.padding(10.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Rounded.MoreHoriz,
-                                        contentDescription = null
-                                    )
-                                }
+                                Icon(
+                                    imageVector = Icons.Rounded.MoreHoriz,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
                 }
             }
-            Column(
-                Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.image_buddha),
-                    contentDescription = null,
-                    modifier = Modifier.size(250.dp)
-                )
-            }
+        }
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.image_buddha),
+                contentDescription = null,
+                modifier = Modifier.size(250.dp)
+            )
         }
     }
+}

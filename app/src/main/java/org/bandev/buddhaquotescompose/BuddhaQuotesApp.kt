@@ -15,10 +15,13 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
+import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 
 @Composable
-fun BuddhaQuotesApp() {
+fun BuddhaQuotesApp(
+    viewModel: BuddhaQuotesViewModel
+) {
     BuddhaQuotesComposeTheme() {
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
@@ -55,7 +58,8 @@ fun BuddhaQuotesApp() {
                         HomeScene(
                             openDrawer = {
                                 coroutineScope.launch { if (scaffoldState.drawerState.isClosed) scaffoldState.drawerState.open() else scaffoldState.drawerState.close() }
-                            }
+                            },
+                            viewModel = viewModel
                         )
                     }
                     composable(Scene.Settings.route) {
