@@ -21,9 +21,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package org.bandev.buddhaquotescompose.items
 
 data class List(
-    var id: Int,
-    var title: String,
-    var count: Int,
-    val system: Boolean,
-    val icon: ListIcon
+    var id: Int = 0,
+    var title: String = "",
+    var count: Int= 0,
+    val system: Boolean = false,
+    val icon: ListIcon = ListIcon()
 )

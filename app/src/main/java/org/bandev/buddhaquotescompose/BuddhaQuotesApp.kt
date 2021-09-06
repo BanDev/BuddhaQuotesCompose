@@ -16,6 +16,10 @@ import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
+import org.bandev.buddhaquotescompose.scenes.AboutScene
+import org.bandev.buddhaquotescompose.scenes.HomeScene
+import org.bandev.buddhaquotescompose.scenes.ListsScene
+import org.bandev.buddhaquotescompose.scenes.SettingsScene
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 
 @Composable
@@ -60,6 +64,15 @@ fun BuddhaQuotesApp(
                                 coroutineScope.launch { if (scaffoldState.drawerState.isClosed) scaffoldState.drawerState.open() else scaffoldState.drawerState.close() }
                             },
                             viewModel = viewModel
+                        )
+                    }
+                    composable(Scene.Lists.route) {
+                        ListsScene(
+                            openDrawer = {
+                                coroutineScope.launch { if (scaffoldState.drawerState.isClosed) scaffoldState.drawerState.open() else scaffoldState.drawerState.close() }
+                            },
+                            viewModel = viewModel,
+                            navController = navController
                         )
                     }
                     composable(Scene.Settings.route) {

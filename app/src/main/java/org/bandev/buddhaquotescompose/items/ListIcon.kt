@@ -20,12 +20,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package org.bandev.buddhaquotescompose.items
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class ListIcon(
-    val id: Int,
-    val imageVector: ImageVector,
-    val colour: Color,
+    val id: Int = 0,
+    val imageVector: ImageVector = Icons.Rounded.Circle,
+    val colour: Color = Color.White,
     var selected: Boolean = false
 )

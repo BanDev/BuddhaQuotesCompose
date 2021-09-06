@@ -1,8 +1,7 @@
-package org.bandev.buddhaquotescompose
+package org.bandev.buddhaquotescompose.scenes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -18,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
+import org.bandev.buddhaquotescompose.R
 
 @Composable
-fun AboutScene(openDrawer: () -> Unit) {
+fun SettingsScene(openDrawer: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text(stringResource(R.string.app_name)) },
@@ -45,7 +45,7 @@ fun AboutScene(openDrawer: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "About page content.")
+            Text(text = "Settings Page content here.")
         }
     }
 }

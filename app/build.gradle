@@ -69,8 +69,11 @@ dependencies {
     implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
+    // Kotlin coroutines - https://github.com/Kotlin/kotlinx.coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
     // Room - https://developer.android.com/training/data-storage/room
-    def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"

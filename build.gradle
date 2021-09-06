@@ -6,7 +6,9 @@ task clean(type: Delete) {
 
 buildscript {
     ext {
-        compose_version = '1.0.1'
+        compose_version = '1.0.2'
         accompanist_version = '0.17.0'
+        coroutines_version = '1.5.2'
+        room_version = '2.3.0'
     }
 }
