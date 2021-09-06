@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.insets.LocalWindowInsets
@@ -33,8 +34,7 @@ import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 
 @Composable
 fun HomeScene(
-    openDrawer: () -> Unit,
-    viewModel: BuddhaQuotesViewModel
+    viewModel: BuddhaQuotesViewModel,
 ) {
     var quote by remember { mutableStateOf(Quote(1, R.string.blank, false)) }
     LaunchedEffect(
@@ -46,25 +46,6 @@ fun HomeScene(
     var isLiked by remember { mutableStateOf(quote.liked) }
     val context = LocalContext.current
     Column {
-        TopAppBar(
-            title = { Text(stringResource(R.string.app_name)) },
-            navigationIcon = {
-                IconButton(onClick = { openDrawer() }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Menu,
-                        contentDescription = null
-                    )
-                }
-            },
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.statusBars,
-                applyStart = true,
-                applyTop = true,
-                applyEnd = true,
-            ),
-            backgroundColor = Color.Transparent,
-            elevation = 0.dp
-        )
         Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
             Card(
                 modifier = Modifier
@@ -74,11 +55,31 @@ fun HomeScene(
                 shape = RoundedCornerShape(11.dp),
                 backgroundColor = LighterBackground
             ) {
-                Column(Modifier.padding()) {
+                Column(Modifier.padding(20.dp)) {
+                    Icon(
+                        imageVector = Icons.Rounded.FormatQuote,
+                        contentDescription = null
+                    )
                     Text(
                         text = stringResource(quote.resource),
                         fontSize = 20.sp,
-                        modifier = Modifier.padding(20.dp)
+                        textAlign = TextAlign.Center
+                    )
+                    Row(
+                        Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.FormatQuote,
+                            contentDescription = null
+                        )
+                    }
+                    Text(
+                        text = stringResource(R.string.attribution_buddha),
+                        fontSize = 20.sp,
                     )
                 }
             }
@@ -103,14 +104,6 @@ fun HomeScene(
                             contentDescription = null
                         )
                     }
-                    FavoriteButton(
-                        isChecked = isLiked,
-                        onClick = {
-                            isLiked = !isLiked
-                            viewModel.Quotes().setLike(quote.id, isLiked)
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    )
                     IconButton(
                         onClick = {
                             context.shareQuote(quote = quote)
@@ -122,6 +115,14 @@ fun HomeScene(
                             contentDescription = null
                         )
                     }
+                    FavoriteButton(
+                        isChecked = isLiked,
+                        onClick = {
+                            isLiked = !isLiked
+                            viewModel.Quotes().setLike(quote.id, isLiked)
+                        },
+                        modifier = Modifier.padding(5.dp)
+                    )
                     IconButton(
                         onClick = {},
                         modifier = Modifier.padding(5.dp)

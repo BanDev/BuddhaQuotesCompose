@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,9 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.ui.TopAppBar
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.List
@@ -31,7 +27,6 @@ import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListsScene(
-    openDrawer: () -> Unit,
     viewModel: BuddhaQuotesViewModel,
     navController: NavController
 ) {
@@ -55,88 +50,67 @@ fun ListsScene(
         },
         floatingActionButtonPosition = FabPosition.Center
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                navigationIcon = {
-                    IconButton(onClick = { openDrawer() }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Menu,
-                            contentDescription = null
-                        )
-                    }
-                },
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.statusBars,
-                    applyStart = true,
-                    applyTop = true,
-                    applyEnd = true,
-                ),
-                backgroundColor = Color.Transparent,
-                elevation = 0.dp
-            )
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 15.dp, top = 1.dp, end = 15.dp,),
-                horizontalAlignment = Alignment.CenterHorizontally) {
-                items(lists) { list ->
-                    Card(
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(top = 15.dp, bottom = 15.dp),
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(11.dp),
-                        backgroundColor = LighterBackground
-                    ) {
-                        Row() {
-                            Box(
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(start = 15.dp, top = 1.dp, end = 15.dp,),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            items(lists) { list ->
+                Card(
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(top = 7.dp, bottom = 7.dp),
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(11.dp),
+                    backgroundColor = LighterBackground
+                ) {
+                    Row() {
+                        Box(
+                            Modifier
+                                .fillMaxHeight()
+                                .width(60.dp)
+                                .background(list.icon.colour),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                imageVector = list.icon.imageVector,
+                                contentDescription = null
+                            )
+                        }
+                        Column() {
+                            Text(
+                                text = if (list.id != 0) list.title else stringResource(id = R.string.favourites),
+                                modifier = Modifier.padding(20.dp),
+                                fontSize = 20.sp
+                            )
+                            Row(
                                 Modifier
-                                    .fillMaxHeight()
-                                    .width(60.dp)
-                                    .background(list.icon.colour),
-                                contentAlignment = Alignment.Center
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .background(DarkerBackground),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                Image(
-                                    imageVector = list.icon.imageVector,
-                                    contentDescription = null
-                                )
-                            }
-                            Column() {
                                 Text(
-                                    text = if (list.id != 0) list.title else stringResource(id = R.string.favourites),
+                                    text = stringResource(id = if (list.count == 1) R.string.quote_count else R.string.quotes_count, list.count),
                                     modifier = Modifier.padding(20.dp),
-                                    fontSize = 20.sp
+                                    fontSize = 16.sp
                                 )
-                                Row(
+                                Box(
                                     Modifier
                                         .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .background(DarkerBackground),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
+                                        .wrapContentHeight(),
+                                    contentAlignment = Alignment.CenterEnd
                                 ) {
-                                    Text(
-                                        text = stringResource(id = if (list.count == 1) R.string.quote_count else R.string.quotes_count, list.count),
-                                        modifier = Modifier.padding(20.dp),
-                                        fontSize = 16.sp
-                                    )
-                                    Box(
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .wrapContentHeight(),
-                                        contentAlignment = Alignment.CenterEnd
+                                    IconButton(
+                                        onClick = {},
+                                        modifier = Modifier.padding(10.dp)
                                     ) {
-                                        IconButton(
-                                            onClick = {},
-                                            modifier = Modifier.padding(10.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Rounded.MoreVert,
-                                                contentDescription = null
-                                            )
-                                        }
+                                        Icon(
+                                            imageVector = Icons.Rounded.MoreVert,
+                                            contentDescription = null
+                                        )
                                     }
                                 }
                             }

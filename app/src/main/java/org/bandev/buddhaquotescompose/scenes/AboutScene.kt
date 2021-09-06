@@ -20,32 +20,11 @@ import com.google.accompanist.insets.ui.TopAppBar
 import org.bandev.buddhaquotescompose.R
 
 @Composable
-fun AboutScene(openDrawer: () -> Unit) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text(stringResource(R.string.app_name)) },
-            navigationIcon = {
-                IconButton(onClick = { openDrawer() }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Menu,
-                        contentDescription = null
-                    )
-                }
-            },
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.statusBars,
-                applyStart = true,
-                applyTop = true,
-                applyEnd = true,
-            ),
-            backgroundColor = Color.Transparent,
-            elevation = 0.dp
-        )
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "About page content.")
-        }
+fun AboutScene() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = "About page content.")
     }
 }

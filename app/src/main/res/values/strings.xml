@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Buddha Quotes Compose</string>
     <string name="blank">\n</string>
-    <string name="attribution_buddha">~Gautama Buddha</string>
+    <string name="attribution_buddha">~ Gautama Buddha</string>
+    <string name="your_lists">Your lists</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
     <string name="favourites">Favourites</string>
     <string name="quote_count">%d quote</string>
     <string name="quotes_count">%d quotes</string>

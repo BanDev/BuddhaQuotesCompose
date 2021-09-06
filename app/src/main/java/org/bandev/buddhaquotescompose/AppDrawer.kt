@@ -1,20 +1,22 @@
 package org.bandev.buddhaquotescompose
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.FormatListBulleted
+import androidx.compose.material.icons.rounded.FormatQuote
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.statusBarsPadding
+import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 
 @Composable
 fun AppDrawer(
@@ -23,10 +25,8 @@ fun AppDrawer(
     closeDrawer: () -> Unit
 ) {
     Column(modifier = Modifier
-        .statusBarsPadding()
-        .fillMaxSize()) {
-        BuddhaQuotesLogo(Modifier.padding(16.dp))
-        Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
+        .fillMaxSize()
+        .background(DarkBackground)) {
         DrawerButton(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",
@@ -73,19 +73,6 @@ fun AppDrawer(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun BuddhaQuotesLogo(modifier: Modifier = Modifier) {
-    Row(modifier = modifier) {
-        Image(
-            painter = painterResource(R.drawable.ic_buddha),
-            contentDescription = null, // decorative
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(text = stringResource(id = R.string.app_name))
     }
 }
 
