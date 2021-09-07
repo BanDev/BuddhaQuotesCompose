@@ -1,5 +1,6 @@
 package org.bandev.buddhaquotescompose
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -15,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
@@ -26,11 +27,11 @@ import org.bandev.buddhaquotescompose.scenes.ListsScene
 import org.bandev.buddhaquotescompose.scenes.SettingsScene
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
+import org.bandev.buddhaquotescompose.ui.theme.LightBackground
 
 @Composable
-fun BuddhaQuotesApp(
-    viewModel: BuddhaQuotesViewModel
-) {
+fun BuddhaQuotesApp() {
+    val darkTheme = isSystemInDarkTheme()
     BuddhaQuotesComposeTheme() {
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
@@ -45,7 +46,7 @@ fun BuddhaQuotesApp(
             val scaffoldState = rememberScaffoldState()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route ?: Scene.Home.route
-            Column() {
+            Column {
                 TopAppBar(
                     title = { Text(stringResource(toolbarTitle)) },
                     navigationIcon = {
@@ -62,8 +63,8 @@ fun BuddhaQuotesApp(
                         applyTop = true,
                         applyEnd = true,
                     ),
-                    backgroundColor = DarkBackground,
-                    contentColor = Color.White,
+                    backgroundColor = if (darkTheme) DarkBackground else LightBackground,
+                    contentColor = if (darkTheme) Color.White else Color.Black,
                     elevation = 0.dp
                 )
                 Scaffold(
@@ -87,14 +88,11 @@ fun BuddhaQuotesApp(
                     ) {
                         composable(Scene.Home.route) {
                             toolbarTitle = R.string.app_name
-                            HomeScene(
-                                viewModel = viewModel
-                            )
+                            HomeScene()
                         }
                         composable(Scene.Lists.route) {
                             toolbarTitle = R.string.your_lists
                             ListsScene(
-                                viewModel = viewModel,
                                 navController = navController
                             )
                         }

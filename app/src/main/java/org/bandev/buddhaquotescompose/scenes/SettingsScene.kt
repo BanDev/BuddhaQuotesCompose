@@ -1,19 +1,35 @@
 package org.bandev.buddhaquotescompose.scenes
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Brightness1
+import androidx.compose.material.icons.rounded.DarkMode
+import androidx.compose.material.icons.rounded.LightMode
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.alorma.settings.composables.SettingsMenuLink
+import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 
 @Composable
 fun SettingsScene() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Settings Page content here.")
+    val darkTheme = isSystemInDarkTheme()
+    var themeIcon by remember { mutableStateOf(if (darkTheme) Icons.Rounded.DarkMode else Icons.Rounded.LightMode)}
+    Column {
+        SettingsMenuLink(
+            modifier = Modifier.background(DarkBackground),
+            icon = { Icon(imageVector = themeIcon, contentDescription = "Wifi") },
+            title = { Text(text = "Hello") },
+            subtitle = { Text(text = "This is a longer text") },
+            onClick = {
+                      themeIcon = Icons.Rounded.Brightness1
+            },
+        )
     }
 }

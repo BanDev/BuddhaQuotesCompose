@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
@@ -27,7 +28,7 @@ import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListsScene(
-    viewModel: BuddhaQuotesViewModel,
+    viewModel: BuddhaQuotesViewModel = viewModel(),
     navController: NavController
 ) {
     var lists by remember { mutableStateOf(mutableListOf(List())) }

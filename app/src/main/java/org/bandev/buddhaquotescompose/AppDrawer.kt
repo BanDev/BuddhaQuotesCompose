@@ -24,9 +24,7 @@ fun AppDrawer(
     currentScreen: String,
     closeDrawer: () -> Unit
 ) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(DarkBackground)) {
+    Column(modifier = Modifier.fillMaxSize()) {
         DrawerButton(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",

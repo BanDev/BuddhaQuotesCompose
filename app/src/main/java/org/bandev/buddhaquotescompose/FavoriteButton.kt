@@ -6,6 +6,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconToggleButton
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -33,7 +34,7 @@ fun FavoriteButton(
         val tint by transition.animateColor(
             label = "Tint"
         ) { isChecked ->
-            if (isChecked) Heart else Color.White
+            if (isChecked) Heart else LocalContentColor.current
         }
 
         val size by transition.animateDp(
