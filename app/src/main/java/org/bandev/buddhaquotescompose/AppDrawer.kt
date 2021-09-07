@@ -54,18 +54,18 @@ fun AppDrawer(
             Column {
                 Divider()
                 DrawerButton(
-                    icon = Icons.Rounded.Info,
-                    label = "About",
-                    isSelected = currentScreen == Scene.About.route,
+                    icon = Icons.Rounded.Settings,
+                    label = "Settings",
+                    isSelected = currentScreen == Scene.Settings.route,
                     action = {
                         navigateTo(scenes[2].route)
                         closeDrawer()
                     }
                 )
                 DrawerButton(
-                    icon = Icons.Rounded.Settings,
-                    label = "Settings",
-                    isSelected = currentScreen == Scene.Settings.route,
+                    icon = Icons.Rounded.Info,
+                    label = "About",
+                    isSelected = currentScreen == Scene.About.route,
                     action = {
                         navigateTo(scenes[3].route)
                         closeDrawer()

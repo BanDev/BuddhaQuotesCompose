@@ -62,8 +62,7 @@ fun HomeScene(
                     )
                     Text(
                         text = stringResource(quote.resource),
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center
+                        fontSize = 20.sp
                     )
                     Row(
                         Modifier
@@ -95,7 +94,10 @@ fun HomeScene(
                 ) {
                     IconButton(
                         onClick = {
-                            viewModel.Quotes().getRandom { quote = it }
+                            viewModel.Quotes().getRandom {
+                                quote = it
+                                isLiked = quote.liked
+                            }
                         },
                         modifier = Modifier.padding(5.dp)
                     ) {
@@ -134,7 +136,10 @@ fun HomeScene(
                     }
                     IconButton(
                         onClick = {
-                                  viewModel.Quotes().getRandom { quote = it }
+                                  viewModel.Quotes().getRandom {
+                                      quote = it
+                                      isLiked = quote.liked
+                                  }
                         },
                         modifier = Modifier.padding(5.dp)
                     ) {
