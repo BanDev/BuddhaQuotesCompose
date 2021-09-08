@@ -2,6 +2,7 @@ package org.bandev.buddhaquotescompose.scenes
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -10,7 +11,9 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,8 +43,8 @@ fun HomeScene(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                elevation = 4.dp,
                 shape = RoundedCornerShape(11.dp),
+                elevation = 4.dp,
                 backgroundColor = LighterBackground
             ) {
                 Column(Modifier.padding(20.dp)) {
@@ -76,66 +79,77 @@ fun HomeScene(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                Image(
+                    painter = painterResource(id = R.drawable.image_anahata),
+                    contentDescription = null,
+                    modifier = Modifier.size(250.dp),
+                    alpha = 0.5f
+                )
+                Card(
+                    modifier = Modifier.padding(20.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    backgroundColor = LighterBackground
                 ) {
-                    IconButton(
-                        onClick = {
-                            viewModel.Quotes().getRandom {
-                                quote = it
-                                isLiked = quote.liked
-                            }
-                        },
-                        modifier = Modifier.padding(5.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ChevronLeft,
-                            contentDescription = null
+                        IconButton(
+                            onClick = {
+                                viewModel.Quotes().getRandom {
+                                    quote = it
+                                    isLiked = quote.liked
+                                }
+                            },
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.ChevronLeft,
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                context.shareQuote(quote = quote)
+                            },
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Share,
+                                contentDescription = null
+                            )
+                        }
+                        FavoriteButton(
+                            isChecked = isLiked,
+                            onClick = {
+                                isLiked = !isLiked
+                                viewModel.Quotes().setLike(quote.id, isLiked)
+                            },
+                            modifier = Modifier.padding(5.dp)
                         )
-                    }
-                    IconButton(
-                        onClick = {
-                            context.shareQuote(quote = quote)
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Share,
-                            contentDescription = null
-                        )
-                    }
-                    FavoriteButton(
-                        isChecked = isLiked,
-                        onClick = {
-                            isLiked = !isLiked
-                            viewModel.Quotes().setLike(quote.id, isLiked)
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.AddCircleOutline,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                                  viewModel.Quotes().getRandom {
-                                      quote = it
-                                      isLiked = quote.liked
-                                  }
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ChevronRight,
-                            contentDescription = null
-                        )
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.AddCircleOutline,
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                viewModel.Quotes().getRandom {
+                                    quote = it
+                                    isLiked = quote.liked
+                                }
+                            },
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.ChevronRight,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }

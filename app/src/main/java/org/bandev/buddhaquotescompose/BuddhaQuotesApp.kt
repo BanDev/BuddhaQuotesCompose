@@ -2,25 +2,29 @@ package org.bandev.buddhaquotescompose
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
-import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.scenes.*
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
@@ -66,6 +70,7 @@ fun BuddhaQuotesApp() {
                 )
                 Scaffold(
                     scaffoldState = scaffoldState,
+                    bottomBar = { Spacer(modifier = Modifier.navigationBarsHeight().fillMaxWidth()) },
                     drawerContent = {
                         AppDrawer(
                             navigateTo = { route ->
@@ -78,10 +83,11 @@ fun BuddhaQuotesApp() {
                             closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
                         )
                     }
-                ) {
+                ) { paddingValues ->
                     NavHost(
                         navController = navController,
-                        startDestination = Scene.Home.route
+                        startDestination = Scene.Home.route,
+                        modifier = Modifier.padding(paddingValues = paddingValues)
                     ) {
                         composable(Scene.Home.route) {
                             toolbarTitle = R.string.app_name

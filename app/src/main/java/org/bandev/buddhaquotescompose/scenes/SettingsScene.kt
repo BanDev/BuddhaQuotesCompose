@@ -22,7 +22,7 @@ fun SettingsScene() {
         SettingsMenuLink(
             modifier = Modifier.background(DarkBackground),
             icon = { Icon(imageVector = themeIcon, contentDescription = "Wifi") },
-            title = { Text(text = "Hello") },
+            title = { Text(text = "Theme") },
             subtitle = { Text(text = "This is a longer text") },
             onClick = {
                       themeIcon = Icons.Rounded.Circle

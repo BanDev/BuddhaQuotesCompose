@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsPadding
 import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 
 @Composable
@@ -48,6 +49,7 @@ fun AppDrawer(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .navigationBarsPadding()
                 .padding(bottom = 8.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
