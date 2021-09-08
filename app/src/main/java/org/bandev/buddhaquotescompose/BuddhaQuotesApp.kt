@@ -21,10 +21,7 @@ import com.google.accompanist.insets.ui.TopAppBar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
-import org.bandev.buddhaquotescompose.scenes.AboutScene
-import org.bandev.buddhaquotescompose.scenes.HomeScene
-import org.bandev.buddhaquotescompose.scenes.ListsScene
-import org.bandev.buddhaquotescompose.scenes.SettingsScene
+import org.bandev.buddhaquotescompose.scenes.*
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 import org.bandev.buddhaquotescompose.ui.theme.LightBackground
@@ -95,6 +92,10 @@ fun BuddhaQuotesApp() {
                             ListsScene(
                                 navController = navController
                             )
+                        }
+                        composable(Scene.InsideList.route) {
+                            toolbarTitle = R.string.app_name
+                            InsideListScene()
                         }
                         composable(Scene.Settings.route) {
                             toolbarTitle = R.string.settings

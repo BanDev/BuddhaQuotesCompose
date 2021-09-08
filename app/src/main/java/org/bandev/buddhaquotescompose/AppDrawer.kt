@@ -24,7 +24,9 @@ fun AppDrawer(
     currentScreen: String,
     closeDrawer: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(DarkBackground)) {
         DrawerButton(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",
@@ -56,7 +58,7 @@ fun AppDrawer(
                     label = "Settings",
                     isSelected = currentScreen == Scene.Settings.route,
                     action = {
-                        navigateTo(scenes[2].route)
+                        navigateTo(scenes[3].route)
                         closeDrawer()
                     }
                 )
@@ -65,7 +67,7 @@ fun AppDrawer(
                     label = "About",
                     isSelected = currentScreen == Scene.About.route,
                     action = {
-                        navigateTo(scenes[3].route)
+                        navigateTo(scenes[4].route)
                         closeDrawer()
                     }
                 )

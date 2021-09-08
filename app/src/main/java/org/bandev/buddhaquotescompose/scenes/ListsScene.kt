@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.bandev.buddhaquotescompose.R
+import org.bandev.buddhaquotescompose.Scene
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.List
 import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
@@ -57,7 +58,7 @@ fun ListsScene(
             horizontalAlignment = Alignment.CenterHorizontally) {
             items(lists) { list ->
                 Card(
-                    onClick = {},
+                    onClick = { navController.navigate(Scene.InsideList.route) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
