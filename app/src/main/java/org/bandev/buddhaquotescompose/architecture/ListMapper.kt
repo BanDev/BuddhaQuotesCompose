@@ -25,8 +25,6 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.Color
-import androidx.core.content.ContextCompat.getColor
-import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.items.List
 import org.bandev.buddhaquotescompose.items.ListIcon
 

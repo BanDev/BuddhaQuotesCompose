@@ -33,7 +33,7 @@ import org.bandev.buddhaquotescompose.ui.theme.LightBackground
 @Composable
 fun BuddhaQuotesApp() {
     val darkTheme = isSystemInDarkTheme()
-    BuddhaQuotesComposeTheme() {
+    BuddhaQuotesComposeTheme {
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             val darkIcons = MaterialTheme.colors.isLight
