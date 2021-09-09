@@ -11,8 +11,10 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.asLiveData
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,14 +28,29 @@ import com.google.accompanist.insets.ui.TopAppBar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.scenes.*
+import org.bandev.buddhaquotescompose.settings.Settings
+import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 import org.bandev.buddhaquotescompose.ui.theme.LightBackground
 
 @Composable
 fun BuddhaQuotesApp() {
-    val darkTheme = isSystemInDarkTheme()
-    BuddhaQuotesComposeTheme {
+
+    val settingsViewModel = SettingsViewModel(LocalContext.current)
+
+    settingsViewModel.settings.value.theme.collectAsState(initial = )
+
+    val themeInt by remember { mutableStateOf(2) }
+    LaunchedEffect(key1 = Unit, block = { settingsViewModel.settings.value. })
+
+    val darkTheme: Boolean = when (themeInt) {
+        1 -> false
+        2 -> true
+        else -> isSystemInDarkTheme()
+    }
+
+    BuddhaQuotesComposeTheme(darkTheme = darkTheme) {
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             val darkIcons = MaterialTheme.colors.isLight
@@ -70,7 +87,9 @@ fun BuddhaQuotesApp() {
                 )
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    bottomBar = { Spacer(modifier = Modifier.navigationBarsHeight().fillMaxWidth()) },
+                    bottomBar = { Spacer(modifier = Modifier
+                        .navigationBarsHeight()
+                        .fillMaxWidth()) },
                     drawerContent = {
                         AppDrawer(
                             navigateTo = { route ->
