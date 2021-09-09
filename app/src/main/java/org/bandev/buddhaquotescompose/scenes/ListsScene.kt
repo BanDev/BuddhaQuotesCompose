@@ -54,7 +54,7 @@ fun ListsScene(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(start = 15.dp, top = 1.dp, end = 15.dp,),
+            contentPadding = PaddingValues(start = 15.dp, top = 1.dp, end = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
             items(lists) { list ->
                 Card(
@@ -67,7 +67,7 @@ fun ListsScene(
                     shape = RoundedCornerShape(11.dp),
                     backgroundColor = LighterBackground
                 ) {
-                    Row() {
+                    Row {
                         Box(
                             Modifier
                                 .fillMaxHeight()
@@ -80,7 +80,7 @@ fun ListsScene(
                                 contentDescription = null
                             )
                         }
-                        Column() {
+                        Column {
                             Text(
                                 text = if (list.id != 0) list.title else stringResource(id = R.string.favourites),
                                 modifier = Modifier.padding(20.dp),
