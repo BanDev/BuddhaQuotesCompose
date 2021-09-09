@@ -90,36 +90,39 @@ fun AboutScene() {
                             backgroundColor = LighterBackground
                         ) {
                             Column {
-                                Row(Modifier.padding(start = 20.dp, top = 20.dp, end = 20.dp)) {
-                                    Text(
-                                        text = library.libraryName,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16.sp
-                                    )
-                                    Box(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
+                                Column(Modifier.padding(20.dp)) {
+                                    Row() {
                                         Text(
-                                            text = library.libraryVersion,
+                                            text = library.libraryName,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp
+                                        )
+                                        Box(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            contentAlignment = Alignment.CenterEnd
+                                        ) {
+                                            Text(
+                                                text = library.libraryVersion,
+                                                color = Color.LightGray,
+                                                fontSize = 14.sp
+                                            )
+                                        }
+                                    }
+                                    Text(
+                                        text = library.author,
+                                        color = Color.LightGray,
+                                        fontSize = 14.sp
+                                    )
+                                    if (license != null) {
+                                        Text(
+                                            text = license.licenseName,
+                                            modifier = Modifier.padding(top = 10.dp),
                                             color = Color.LightGray,
                                             fontSize = 14.sp
                                         )
                                     }
                                 }
-                                Text(
-                                    text = library.author,
-                                    modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-                                    color = Color.LightGray,
-                                    fontSize = 14.sp
-                                )
                                 if (license != null) {
-                                    Text(
-                                        text = license.licenseName,
-                                        modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp),
-                                        color = Color.LightGray,
-                                        fontSize = 14.sp
-                                    )
                                     AnimatedVisibility(visible = expanded) {
                                         Column(Modifier.background(DarkerBackground)) {
                                             MarkdownText(
