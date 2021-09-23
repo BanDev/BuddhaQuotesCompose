@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +24,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.mikepenz.aboutlibraries.Libs
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
+import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
 import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
@@ -33,7 +35,7 @@ import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 @Composable
 fun AboutScene() {
     val pages = remember {
-        listOf("About", "Libraries")
+        listOf(R.string.about, R.string.libraries)
     }
 
     val pagerState = rememberPagerState(pageCount = pages.size)
@@ -42,26 +44,23 @@ fun AboutScene() {
 
     Column(Modifier.fillMaxSize()) {
         TabRow(
-            // Our selected tab is our current page
             selectedTabIndex = pagerState.currentPage,
-            // Override the indicator, using the provided pagerTabIndicatorOffset modifier
+            backgroundColor = MaterialTheme.colors.background,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                 )
             }
         ) {
-            // Add tabs for all of our pages
             pages.forEachIndexed { index, title ->
                 Tab(
-                    text = { Text(title.uppercase()) },
+                    text = { Text(stringResource(id = title).uppercase()) },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(index)
                         }
-                    },
-                    modifier = Modifier.background(DarkBackground)
+                    }
                 )
             }
         }
