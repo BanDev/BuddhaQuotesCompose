@@ -1,12 +1,16 @@
 syntax = "proto3";
 
-option java_package = "org.bandev.buddhaquotescompose";
+option java_package = "org.bandev.buddhaquotescompose.settings";
 option java_multiple_files = true;
 
 message Settings {
+
   enum Theme {
-    Auto = 0;
-    Light = 1;
-    Dark = 2;
+    UNSPECIFIED = 0;
+    LIGHT = 1;
+    DARK = 2;
+    SYSTEM = 3;
   }
+
+  Theme theme = 1;
 }

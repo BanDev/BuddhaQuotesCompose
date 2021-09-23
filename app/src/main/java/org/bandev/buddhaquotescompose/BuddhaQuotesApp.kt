@@ -1,6 +1,5 @@
 package org.bandev.buddhaquotescompose
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +10,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -26,14 +26,16 @@ import com.google.accompanist.insets.ui.TopAppBar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.scenes.*
+import org.bandev.buddhaquotescompose.settings.SettingsViewModel
+import org.bandev.buddhaquotescompose.settings.boolify
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
-import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
-import org.bandev.buddhaquotescompose.ui.theme.LightBackground
 
 @Composable
 fun BuddhaQuotesApp() {
-    val darkTheme = isSystemInDarkTheme()
-    BuddhaQuotesComposeTheme {
+
+    val settings = SettingsViewModel(LocalContext.current)
+
+    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().boolify()) { colors ->
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             val darkIcons = MaterialTheme.colors.isLight
@@ -64,13 +66,15 @@ fun BuddhaQuotesApp() {
                         applyTop = true,
                         applyEnd = true,
                     ),
-                    backgroundColor = if (darkTheme) DarkBackground else LightBackground,
-                    contentColor = if (darkTheme) Color.White else Color.Black,
+                    backgroundColor = colors.background,
+                    contentColor = colors.onBackground,
                     elevation = 0.dp
                 )
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    bottomBar = { Spacer(modifier = Modifier.navigationBarsHeight().fillMaxWidth()) },
+                    bottomBar = { Spacer(modifier = Modifier
+                        .navigationBarsHeight()
+                        .fillMaxWidth()) },
                     drawerContent = {
                         AppDrawer(
                             navigateTo = { route ->
@@ -82,7 +86,7 @@ fun BuddhaQuotesApp() {
                             currentScreen = currentRoute,
                             closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
                         )
-                    }
+                    },
                 ) { paddingValues ->
                     NavHost(
                         navController = navController,
