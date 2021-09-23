@@ -35,7 +35,7 @@ fun BuddhaQuotesApp() {
 
     val settings = SettingsViewModel(LocalContext.current)
 
-    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().boolify()) { colors ->
+    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().boolify()) {
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             val darkIcons = MaterialTheme.colors.isLight
@@ -66,8 +66,8 @@ fun BuddhaQuotesApp() {
                         applyTop = true,
                         applyEnd = true,
                     ),
-                    backgroundColor = colors.background,
-                    contentColor = colors.onBackground,
+                    backgroundColor = MaterialTheme.colors.background,
+                    contentColor = MaterialTheme.colors.onBackground,
                     elevation = 0.dp
                 )
                 Scaffold(

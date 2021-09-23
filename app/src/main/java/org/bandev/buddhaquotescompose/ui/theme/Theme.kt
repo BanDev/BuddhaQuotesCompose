@@ -33,7 +33,7 @@ private val LightColorPalette = lightColors(
 @Composable
 fun BuddhaQuotesComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable (Colors) -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {
         DarkColorPalette
@@ -45,6 +45,6 @@ fun BuddhaQuotesComposeTheme(
         colors = colors,
         typography = Typography,
         shapes = Shapes,
-        content = { content(colors) }
+        content = content
     )
 }

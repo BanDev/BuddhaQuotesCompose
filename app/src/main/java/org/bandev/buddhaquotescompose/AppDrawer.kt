@@ -27,7 +27,7 @@ fun AppDrawer(
 ) {
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(DarkBackground)) {
+        .background(MaterialTheme.colors.background)) {
         DrawerButton(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",
