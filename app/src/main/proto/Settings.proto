@@ -12,5 +12,5 @@ message Settings {
     SYSTEM = 3;
   }
 
-  Theme theme = 1;
+  Theme theme = 3;
 }
