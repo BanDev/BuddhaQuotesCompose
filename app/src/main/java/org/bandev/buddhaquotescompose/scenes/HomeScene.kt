@@ -24,7 +24,6 @@ import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.Quote
-import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 
 @Composable
 fun HomeScene(
@@ -47,7 +46,6 @@ fun HomeScene(
                     .wrapContentHeight(),
                 shape = RoundedCornerShape(11.dp),
                 elevation = 4.dp,
-                backgroundColor = LighterBackground
             ) {
                 Column(Modifier.padding(20.dp)) {
                     Icon(
@@ -90,7 +88,7 @@ fun HomeScene(
                 Card(
                     modifier = Modifier.padding(20.dp),
                     shape = RoundedCornerShape(20.dp),
-                    backgroundColor = LighterBackground
+                    elevation = 4.dp
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,

@@ -1,6 +1,5 @@
 package org.bandev.buddhaquotescompose
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.asLiveData
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -28,29 +26,16 @@ import com.google.accompanist.insets.ui.TopAppBar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.scenes.*
-import org.bandev.buddhaquotescompose.settings.Settings
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
+import org.bandev.buddhaquotescompose.settings.boolify
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
-import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
-import org.bandev.buddhaquotescompose.ui.theme.LightBackground
 
 @Composable
 fun BuddhaQuotesApp() {
 
-    val settingsViewModel = SettingsViewModel(LocalContext.current)
+    val settings = SettingsViewModel(LocalContext.current)
 
-    settingsViewModel.settings.value.theme.collectAsState(initial = )
-
-    val themeInt by remember { mutableStateOf(2) }
-    LaunchedEffect(key1 = Unit, block = { settingsViewModel.settings.value. })
-
-    val darkTheme: Boolean = when (themeInt) {
-        1 -> false
-        2 -> true
-        else -> isSystemInDarkTheme()
-    }
-
-    BuddhaQuotesComposeTheme(darkTheme = darkTheme) {
+    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().boolify()) { colors ->
         ProvideWindowInsets {
             val systemUiController = rememberSystemUiController()
             val darkIcons = MaterialTheme.colors.isLight
@@ -81,8 +66,8 @@ fun BuddhaQuotesApp() {
                         applyTop = true,
                         applyEnd = true,
                     ),
-                    backgroundColor = if (darkTheme) DarkBackground else LightBackground,
-                    contentColor = if (darkTheme) Color.White else Color.Black,
+                    backgroundColor = colors.background,
+                    contentColor = colors.onBackground,
                     elevation = 0.dp
                 )
                 Scaffold(
@@ -101,7 +86,7 @@ fun BuddhaQuotesApp() {
                             currentScreen = currentRoute,
                             closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
                         )
-                    }
+                    },
                 ) { paddingValues ->
                     NavHost(
                         navController = navController,
