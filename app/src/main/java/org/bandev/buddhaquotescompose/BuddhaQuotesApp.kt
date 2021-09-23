@@ -87,6 +87,7 @@ fun BuddhaQuotesApp() {
                             closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
                         )
                     },
+                    drawerElevation = 0.dp
                 ) { paddingValues ->
                     NavHost(
                         navController = navController,
