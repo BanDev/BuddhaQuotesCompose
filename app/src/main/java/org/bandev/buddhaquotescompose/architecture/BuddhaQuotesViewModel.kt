@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.items.List
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.Quote
+import java.util.*
 
 /**
  * A level of abstraction between the ui
@@ -70,6 +71,15 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         fun getRandom(after: (quote: Quote) -> Unit) {
             count { size ->
                 get((1..size).random()) { quote -> after(quote) }
+            }
+        }
+
+        /** Get the quote of the day */
+        fun getDaily(after: (Quote) -> Unit) {
+            val day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+            count { max ->
+                val id = day % max
+                get(id, after)
             }
         }
 

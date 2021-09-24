@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.FormatListBulleted
-import androidx.compose.material.icons.rounded.FormatQuote
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +14,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
-import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 
 @Composable
 fun AppDrawer(
@@ -46,6 +42,15 @@ fun AppDrawer(
                 closeDrawer()
             }
         )
+        DrawerButton(
+            icon = Icons.Rounded.CalendarToday,
+            label = "Daily Quote",
+            isSelected = currentScreen == Scene.DailyQuote.route,
+            action = {
+                navigateTo(scenes[3].route)
+                closeDrawer()
+            }
+        )
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -60,7 +65,7 @@ fun AppDrawer(
                     label = "Settings",
                     isSelected = currentScreen == Scene.Settings.route,
                     action = {
-                        navigateTo(scenes[3].route)
+                        navigateTo(scenes[4].route)
                         closeDrawer()
                     }
                 )
@@ -69,7 +74,7 @@ fun AppDrawer(
                     label = "About",
                     isSelected = currentScreen == Scene.About.route,
                     action = {
-                        navigateTo(scenes[4].route)
+                        navigateTo(scenes[5].route)
                         closeDrawer()
                     }
                 )

@@ -104,6 +104,10 @@ fun BuddhaQuotesApp() {
                                 navController = navController
                             )
                         }
+                        composable(Scene.DailyQuote.route) {
+                            toolbarTitle = R.string.daily_quote
+                            DailyQuoteScene()
+                        }
                         composable(Scene.InsideList.route) {
                             toolbarTitle = R.string.app_name
                             InsideListScene()

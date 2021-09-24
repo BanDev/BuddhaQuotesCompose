@@ -8,17 +8,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.AddCircleOutline
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
@@ -40,40 +40,7 @@ fun HomeScene(
     val context = LocalContext.current
     Column {
         Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = RoundedCornerShape(11.dp),
-                elevation = 4.dp,
-            ) {
-                Column(Modifier.padding(20.dp)) {
-                    Icon(
-                        imageVector = Icons.Rounded.FormatQuote,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = stringResource(quote.resource),
-                        fontSize = 20.sp
-                    )
-                    Row(
-                        Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.FormatQuote,
-                            contentDescription = null
-                        )
-                    }
-                    Text(
-                        text = stringResource(R.string.attribution_buddha),
-                        fontSize = 20.sp,
-                    )
-                }
-            }
+            quote.AsCard()
             Column(
                 Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
