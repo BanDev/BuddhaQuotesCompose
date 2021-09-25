@@ -1,5 +1,6 @@
 package org.bandev.buddhaquotescompose.scenes
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.bandev.buddhaquotescompose.FavoriteButton
@@ -38,47 +40,57 @@ fun DailyQuoteScene(
 
     Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
         quote.AsCard()
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            Card(
-                modifier = Modifier.padding(20.dp),
-                shape = RoundedCornerShape(20.dp),
-                elevation = 4.dp
+            Image(
+                painter = painterResource(id = R.drawable.ic_daily_specials),
+                contentDescription = null,
+                modifier = Modifier.size(250.dp)
+            )
+            Column(
+                Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                Card(
+                    modifier = Modifier.padding(20.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = 4.dp
                 ) {
-                    IconButton(
-                        onClick = {
-                            context.shareQuote(quote = quote)
-                        },
-                        modifier = Modifier.padding(5.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Share,
-                            contentDescription = null
+                        IconButton(
+                            onClick = {
+                                context.shareQuote(quote = quote)
+                            },
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Share,
+                                contentDescription = null
+                            )
+                        }
+                        FavoriteButton(
+                            isChecked = isLiked,
+                            onClick = {
+                                isLiked = !isLiked
+                                viewModel.Quotes().setLike(quote.id, isLiked)
+                            },
+                            modifier = Modifier.padding(5.dp)
                         )
-                    }
-                    FavoriteButton(
-                        isChecked = isLiked,
-                        onClick = {
-                            isLiked = !isLiked
-                            viewModel.Quotes().setLike(quote.id, isLiked)
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.AddCircleOutline,
-                            contentDescription = null
-                        )
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.AddCircleOutline,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }

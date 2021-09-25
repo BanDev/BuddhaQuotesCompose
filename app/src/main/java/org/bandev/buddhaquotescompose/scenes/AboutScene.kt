@@ -90,7 +90,7 @@ fun AboutScene() {
                         ) {
                             Column {
                                 Column(Modifier.padding(20.dp)) {
-                                    Row() {
+                                    Row {
                                         Text(
                                             text = library.libraryName,
                                             fontWeight = FontWeight.Bold,
