@@ -29,6 +29,7 @@ import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.items.Option
 import org.bandev.buddhaquotescompose.settings.Settings
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
+import org.bandev.buddhaquotescompose.settings.iconify
 import org.bandev.buddhaquotescompose.settings.stringify
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -39,14 +40,6 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
 
     val theme = viewModel.getThemeLive()
 
-    val themeIcon by remember { mutableStateOf(
-        when (theme.toString()) {
-            "LIGHT" -> Icons.Rounded.LightMode
-            "DARK" -> Icons.Rounded.DarkMode
-            else -> Icons.Rounded.Brightness6
-        })
-    }
-
     val options = arrayOf(
         Option(icon = Icons.Rounded.LightMode, stringRes = R.string.light, theme = Settings.Theme.LIGHT),
         Option(icon = Icons.Rounded.DarkMode, stringRes = R.string.dark, theme = Settings.Theme.DARK),
@@ -56,8 +49,8 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
     Column {
         SettingsMenuLink(
             modifier = Modifier.background(MaterialTheme.colors.background),
-            icon = { Icon(imageVector = themeIcon, contentDescription = null) },
-            title = { Text(text = "Theme") },
+            icon = { Icon(imageVector = theme.iconify(), contentDescription = null) },
+            title = { Text(text = stringResource(R.string.theme)) },
             subtitle = { Text(text = theme.stringify()) },
             onClick = { openDialog = true },
         )

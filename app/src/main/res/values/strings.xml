@@ -252,5 +252,6 @@
     <string name='quote_236' id='545'>Your own self is your master; who else could be? With yourself well controlled, you gain a master very hard to find</string>
     <string name='quote_237' id='546'>You yourself must strive. The Buddhas only point the way</string>
     <string name="daily_quote">Daily Quote</string>
+    <string name="theme">Theme</string>
 
 </resources>
