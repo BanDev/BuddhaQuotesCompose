@@ -72,11 +72,11 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
                         Modifier
                             .wrapContentHeight()
                             .width(width = 500.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .background(
                                 color = Color.Transparent,
                                 shape = MaterialTheme.shapes.large
                             )
-                            .clip(RoundedCornerShape(10.dp))
                             .clickable {
                                 openDialog = false
                                 viewModel.setTheme(option.theme)

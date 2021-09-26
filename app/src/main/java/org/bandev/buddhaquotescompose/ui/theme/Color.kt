@@ -9,6 +9,8 @@ val DarkerBackground = Color(0xFF383838)
 val DarkBackground = Color(0xFF222222)
 val LightBackground = Color(0xFFF8F8F8)
 
+val OceanBlue = Color(0xFF5173B0)
+
 
 /**
  * Default theme colours

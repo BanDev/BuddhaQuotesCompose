@@ -42,6 +42,12 @@ fun AppDrawer(
             label = "Daily Quote",
             isSelected = currentScreen == Scene.DailyQuote.route,
             route = scenes[3].route
+        ),
+        DrawerButtonData(
+            icon = Icons.Rounded.SelfImprovement,
+            label = "Meditate",
+            isSelected = currentScreen == Scene.Meditate.route,
+            route = scenes[4].route
         )
     )
 
@@ -50,13 +56,13 @@ fun AppDrawer(
             icon = Icons.Rounded.Settings,
             label = "Settings",
             isSelected = currentScreen == Scene.Settings.route,
-            route = scenes[4].route
+            route = scenes[5].route
         ),
         DrawerButtonData(
             icon = Icons.Rounded.Info,
             label = "About",
             isSelected = currentScreen == Scene.About.route,
-            route = scenes[5].route
+            route = scenes[6].route
         )
     )
 

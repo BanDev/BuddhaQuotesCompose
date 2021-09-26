@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,18 +21,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.scenes.*
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.settings.boolify
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
+import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,14 +45,8 @@ class MainActivity : ComponentActivity() {
             val settings = SettingsViewModel(LocalContext.current)
 
             BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().boolify()) {
-                ProvideWindowInsets {
-                    val systemUiController = rememberSystemUiController()
-                    val darkIcons = MaterialTheme.colors.isLight
-                    SideEffect {
-                        systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = darkIcons)
-                    }
+                EdgeToEdgeContent {
                     var toolbarTitle by remember { mutableStateOf(R.string.app_name) }
-
                     val navController = rememberNavController()
                     val coroutineScope = rememberCoroutineScope()
                     val scaffoldState = rememberScaffoldState()
@@ -115,13 +107,17 @@ class MainActivity : ComponentActivity() {
                                         navController = navController
                                     )
                                 }
+                                composable(Scene.InsideList.route) {
+                                    toolbarTitle = R.string.app_name
+                                    InsideListScene()
+                                }
                                 composable(Scene.DailyQuote.route) {
                                     toolbarTitle = R.string.daily_quote
                                     DailyQuoteScene()
                                 }
-                                composable(Scene.InsideList.route) {
-                                    toolbarTitle = R.string.app_name
-                                    InsideListScene()
+                                composable(Scene.Meditate.route) {
+                                    toolbarTitle = R.string.meditate
+                                    MeditateScene()
                                 }
                                 composable(Scene.Settings.route) {
                                     toolbarTitle = R.string.settings

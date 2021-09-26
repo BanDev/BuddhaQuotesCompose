@@ -37,10 +37,7 @@ import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 )
 @Composable
 fun AboutScene() {
-    val pages = remember {
-        listOf(R.string.about, R.string.libraries)
-    }
-
+    val pages = remember { listOf(R.string.about, R.string.libraries) }
     val pagerState = rememberPagerState(pageCount = pages.size)
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -55,9 +52,9 @@ fun AboutScene() {
                 )
             }
         ) {
-            pages.forEachIndexed { index, title ->
+            pages.forEachIndexed { index, titleRes ->
                 Tab(
-                    text = { Text(stringResource(id = title).uppercase()) },
+                    text = { Text(stringResource(id = titleRes).uppercase()) },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         coroutineScope.launch {
