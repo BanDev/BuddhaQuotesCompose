@@ -6,15 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Brightness6
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.LightMode
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,20 +29,16 @@ import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.items.Option
 import org.bandev.buddhaquotescompose.settings.Settings
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
-import org.bandev.buddhaquotescompose.settings.boolify
+import org.bandev.buddhaquotescompose.settings.iconify
 import org.bandev.buddhaquotescompose.settings.stringify
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.current)) {
 
-    val openDialog = remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf(false) }
 
     val theme = viewModel.getThemeLive()
-
-    val darkTheme = theme.boolify()
-
-    val themeIcon by remember { mutableStateOf(if (darkTheme) Icons.Rounded.DarkMode else Icons.Rounded.LightMode)}
 
     val options = arrayOf(
         Option(icon = Icons.Rounded.LightMode, stringRes = R.string.light, theme = Settings.Theme.LIGHT),
@@ -54,17 +49,15 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
     Column {
         SettingsMenuLink(
             modifier = Modifier.background(MaterialTheme.colors.background),
-            icon = { Icon(imageVector = themeIcon, contentDescription = "Wifi") },
-            title = { Text(text = "Theme") },
+            icon = { Icon(imageVector = theme.iconify(), contentDescription = null) },
+            title = { Text(text = stringResource(R.string.theme)) },
             subtitle = { Text(text = theme.stringify()) },
-            onClick = {
-                openDialog.value = true
-            },
+            onClick = { openDialog = true },
         )
     }
 
-    if (openDialog.value) {
-        Dialog(onDismissRequest = { openDialog.value = false }) {
+    if (openDialog) {
+        Dialog(onDismissRequest = { openDialog = false }) {
             LazyColumn(
                 Modifier
                     .background(
@@ -79,13 +72,13 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
                         Modifier
                             .wrapContentHeight()
                             .width(width = 500.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .background(
                                 color = Color.Transparent,
                                 shape = MaterialTheme.shapes.large
                             )
-                            .clip(RoundedCornerShape(10.dp))
                             .clickable {
-                                openDialog.value = false
+                                openDialog = false
                                 viewModel.setTheme(option.theme)
                             },
                         contentAlignment = Alignment.CenterStart

@@ -8,17 +8,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.AddCircleOutline
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
@@ -38,118 +38,82 @@ fun HomeScene(
     )
     var isLiked by remember { mutableStateOf(quote.liked) }
     val context = LocalContext.current
-    Column {
-        Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
+    Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
+        quote.AsCard()
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.image_anahata),
+                contentDescription = null,
+                modifier = Modifier.size(250.dp)
+            )
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = RoundedCornerShape(11.dp),
-                elevation = 4.dp,
+                modifier = Modifier.padding(20.dp),
+                shape = RoundedCornerShape(20.dp),
+                elevation = 4.dp
             ) {
-                Column(Modifier.padding(20.dp)) {
-                    Icon(
-                        imageVector = Icons.Rounded.FormatQuote,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = stringResource(quote.resource),
-                        fontSize = 20.sp
-                    )
-                    Row(
-                        Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    IconButton(
+                        onClick = {
+                            viewModel.Quotes().getRandom {
+                                quote = it
+                                isLiked = quote.liked
+                            }
+                        },
+                        modifier = Modifier.padding(5.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.FormatQuote,
+                            imageVector = Icons.Rounded.ChevronLeft,
                             contentDescription = null
                         )
                     }
-                    Text(
-                        text = stringResource(R.string.attribution_buddha),
-                        fontSize = 20.sp,
-                    )
-                }
-            }
-            Column(
-                Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.image_anahata),
-                    contentDescription = null,
-                    modifier = Modifier.size(250.dp),
-                    alpha = 0.5f
-                )
-                Card(
-                    modifier = Modifier.padding(20.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    elevation = 4.dp
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                    IconButton(
+                        onClick = {
+                            context.shareQuote(quote = quote)
+                        },
+                        modifier = Modifier.padding(5.dp)
                     ) {
-                        IconButton(
-                            onClick = {
-                                viewModel.Quotes().getRandom {
-                                    quote = it
-                                    isLiked = quote.liked
-                                }
-                            },
-                            modifier = Modifier.padding(5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.ChevronLeft,
-                                contentDescription = null
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                context.shareQuote(quote = quote)
-                            },
-                            modifier = Modifier.padding(5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Share,
-                                contentDescription = null
-                            )
-                        }
-                        FavoriteButton(
-                            isChecked = isLiked,
-                            onClick = {
-                                isLiked = !isLiked
-                                viewModel.Quotes().setLike(quote.id, isLiked)
-                            },
-                            modifier = Modifier.padding(5.dp)
+                        Icon(
+                            imageVector = Icons.Rounded.Share,
+                            contentDescription = null
                         )
-                        IconButton(
-                            onClick = {},
-                            modifier = Modifier.padding(5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.AddCircleOutline,
-                                contentDescription = null
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                viewModel.Quotes().getRandom {
-                                    quote = it
-                                    isLiked = quote.liked
-                                }
-                            },
-                            modifier = Modifier.padding(5.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.ChevronRight,
-                                contentDescription = null
-                            )
-                        }
+                    }
+                    FavoriteButton(
+                        isChecked = isLiked,
+                        onClick = {
+                            isLiked = !isLiked
+                            viewModel.Quotes().setLike(quote.id, isLiked)
+                        },
+                        modifier = Modifier.padding(5.dp)
+                    )
+                    IconButton(
+                        onClick = {},
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.AddCircleOutline,
+                            contentDescription = null
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            viewModel.Quotes().getRandom {
+                                quote = it
+                                isLiked = quote.liked
+                            }
+                        },
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ChevronRight,
+                            contentDescription = null
+                        )
                     }
                 }
             }

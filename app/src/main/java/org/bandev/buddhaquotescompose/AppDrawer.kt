@@ -3,12 +3,11 @@ package org.bandev.buddhaquotescompose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.FormatListBulleted
-import androidx.compose.material.icons.rounded.FormatQuote
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
-import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
+import org.bandev.buddhaquotescompose.items.DrawerButtonData
 
 @Composable
 fun AppDrawer(
@@ -25,27 +24,64 @@ fun AppDrawer(
     currentScreen: String,
     closeDrawer: () -> Unit
 ) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.background)) {
-        DrawerButton(
+    val topDrawerButtons = arrayOf(
+        DrawerButtonData(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",
             isSelected = currentScreen == Scene.Home.route,
-            action = {
-                navigateTo(scenes[0].route)
-                closeDrawer()
-            }
-        )
-        DrawerButton(
+            route = scenes[0].route
+        ),
+        DrawerButtonData(
             icon = Icons.Rounded.FormatListBulleted,
             label = "Lists",
             isSelected = currentScreen == Scene.Lists.route,
-            action = {
-                navigateTo(scenes[1].route)
-                closeDrawer()
-            }
+            route = scenes[1].route
+        ),
+        DrawerButtonData(
+            icon = Icons.Rounded.CalendarToday,
+            label = "Daily Quote",
+            isSelected = currentScreen == Scene.DailyQuote.route,
+            route = scenes[3].route
+        ),
+        DrawerButtonData(
+            icon = Icons.Rounded.SelfImprovement,
+            label = "Meditate",
+            isSelected = currentScreen == Scene.Meditate.route,
+            route = scenes[4].route
         )
+    )
+
+    val bottomDrawerButtons = arrayOf(
+        DrawerButtonData(
+            icon = Icons.Rounded.Settings,
+            label = "Settings",
+            isSelected = currentScreen == Scene.Settings.route,
+            route = scenes[5].route
+        ),
+        DrawerButtonData(
+            icon = Icons.Rounded.Info,
+            label = "About",
+            isSelected = currentScreen == Scene.About.route,
+            route = scenes[6].route
+        )
+    )
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colors.background)) {
+        LazyColumn(Modifier.fillMaxWidth()) {
+            items(topDrawerButtons) { drawerButton ->
+                DrawerButton(
+                    icon = drawerButton.icon,
+                    label = drawerButton.label,
+                    isSelected = drawerButton.isSelected,
+                    action = {
+                        navigateTo(drawerButton.route)
+                        closeDrawer()
+                    }
+                )
+            }
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -55,24 +91,19 @@ fun AppDrawer(
         ) {
             Column {
                 Divider()
-                DrawerButton(
-                    icon = Icons.Rounded.Settings,
-                    label = "Settings",
-                    isSelected = currentScreen == Scene.Settings.route,
-                    action = {
-                        navigateTo(scenes[3].route)
-                        closeDrawer()
+                LazyColumn(Modifier.fillMaxWidth()) {
+                    items(bottomDrawerButtons) { drawerButton ->
+                        DrawerButton(
+                            icon = drawerButton.icon,
+                            label = drawerButton.label,
+                            isSelected = drawerButton.isSelected,
+                            action = {
+                                navigateTo(drawerButton.route)
+                                closeDrawer()
+                            }
+                        )
                     }
-                )
-                DrawerButton(
-                    icon = Icons.Rounded.Info,
-                    label = "About",
-                    isSelected = currentScreen == Scene.About.route,
-                    action = {
-                        navigateTo(scenes[4].route)
-                        closeDrawer()
-                    }
-                )
+                }
             }
         }
     }
@@ -105,7 +136,9 @@ private fun DrawerButton(
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp)
             ) {
                 Image(
                     imageVector = icon,
