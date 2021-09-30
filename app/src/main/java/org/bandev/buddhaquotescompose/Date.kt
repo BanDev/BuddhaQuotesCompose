@@ -1,41 +1,49 @@
 package org.bandev.buddhaquotescompose
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import java.util.*
 
 object Date {
 
-    fun getAsStringLong(): String {
-        val cal = Calendar.getInstance()
-        val weekday = when(cal.get(Calendar.DAY_OF_WEEK)) {
-            1 -> "Sunday"
-            2 -> "Monday"
-            3 -> "Tuesday"
-            4 -> "Wednesday"
-            5 -> "Thursday"
-            6 -> "Friday"
-            else -> "Saturday"
+    @Composable
+    fun getWeekday(calendar: Calendar): String {
+        return stringResource(
+            arrayOf(
+                R.string.sunday, R.string.monday, R.string.tuesday, R.string.wednesday,
+                R.string.thursday, R.string.friday, R.string.saturday
+            )[calendar.get(Calendar.DAY_OF_WEEK) - 1]
+        )
+    }
+
+    @Composable
+    fun getMonth(calendar: Calendar): String {
+        return stringResource(
+            arrayOf(
+                R.string.january, R.string.february, R.string.march, R.string.april, R.string.may,
+                R.string.june, R.string.july, R.string.august, R.string.september, R.string.october,
+                R.string.november, R.string.december
+            )[calendar.get(Calendar.MONTH)]
+        )
+    }
+
+    @Composable
+    fun getOrdinalSuffix(calendar: Calendar): String {
+        return stringResource(
+            when(calendar.get(Calendar.DAY_OF_MONTH) % 10) {
+                1 -> R.string.st
+                2 -> R.string.nd
+                3 -> R.string.rd
+                else -> R.string.th
+            }
+        )
+    }
+
+    @Composable
+    fun getFormattedDate(): String {
+        Calendar.getInstance().also {
+            return getWeekday(it) + " " + it.get(Calendar.DAY_OF_MONTH).toString() + getOrdinalSuffix(it) + " " + getMonth(it)
         }
-        val month = when(cal.get(Calendar.MONTH)) {
-            0 -> "January"
-            1 -> "February"
-            2 -> "March"
-            3 -> "April"
-            4 -> "May"
-            5 -> "June"
-            6 -> "July"
-            7 -> "August"
-            8 -> "September"
-            9 -> "October"
-            10 -> "November"
-            else -> "December"
-        }
-        val aft = when(cal.get(Calendar.DAY_OF_MONTH) % 10) {
-            1 -> "st"
-            2 -> "nd"
-            3 -> "rd"
-            else -> "th"
-        }
-        return weekday + " " + cal.get(Calendar.DAY_OF_MONTH).toString() + aft + " " + month
     }
 
 }
