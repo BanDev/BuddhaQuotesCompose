@@ -38,7 +38,7 @@ import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 @Composable
 fun AboutScene() {
     val pages = remember { listOf(R.string.about, R.string.libraries) }
-    val pagerState = rememberPagerState(pageCount = pages.size)
+    val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -65,7 +65,7 @@ fun AboutScene() {
             }
         }
 
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(count = pages.size, state = pagerState) { page ->
             if (page == 0) {
                 Column(
                     modifier = Modifier
