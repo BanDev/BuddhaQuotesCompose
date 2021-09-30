@@ -60,7 +60,7 @@ fun DailyQuoteScene(
                     )
                     Spacer(Modifier.width(16.dp))
                     Text(
-                        text = Date.getAsString("dd/MM"),
+                        text = Date.getAsStringLong(),
                         style = MaterialTheme.typography.body2,
                     )
             }
