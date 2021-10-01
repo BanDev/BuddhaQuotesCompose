@@ -4,4 +4,9 @@
     <style name="Theme.BuddhaQuotesCompose" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/purple_700</item>
     </style>
+    <style name="Theme.AppSplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_content</item>
+        <item name="postSplashScreenTheme">@style/Theme.BuddhaQuotesCompose</item>
+    </style>
 </resources>
