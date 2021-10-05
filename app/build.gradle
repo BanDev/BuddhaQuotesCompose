@@ -67,7 +67,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     // AboutLibraries - https://github.com/mikepenz/AboutLibraries
-    implementation 'com.mikepenz:aboutlibraries-core:8.9.1'
+    implementation 'com.mikepenz:aboutlibraries-core:8.9.3'
 
     // Accompanist - https://github.com/google/accompanist
     implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.github.jeziellago:compose-markdown:0.2.6'
 
     // Compose Settings - https://github.com/alorma/Compose-Settings
-    implementation 'com.github.alorma:compose-settings:0.3.0'
+    implementation 'com.github.alorma:compose-settings:0.4.0'
 
     // Datastore
     implementation 'androidx.datastore:datastore:1.0.0'

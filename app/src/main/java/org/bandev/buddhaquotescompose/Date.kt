@@ -7,7 +7,7 @@ import java.util.*
 object Date {
 
     @Composable
-    fun getWeekday(calendar: Calendar): String {
+    fun getWeekday(calendar: Calendar = Calendar.getInstance()): String {
         return stringResource(
             arrayOf(
                 R.string.sunday, R.string.monday, R.string.tuesday, R.string.wednesday,
@@ -17,7 +17,7 @@ object Date {
     }
 
     @Composable
-    fun getMonth(calendar: Calendar): String {
+    fun getMonth(calendar: Calendar = Calendar.getInstance()): String {
         return stringResource(
             arrayOf(
                 R.string.january, R.string.february, R.string.march, R.string.april, R.string.may,
@@ -27,8 +27,16 @@ object Date {
         )
     }
 
+    private fun getYear(calendar: Calendar = Calendar.getInstance()): String {
+        return calendar.get(Calendar.YEAR).toString()
+    }
+
+    private fun getDayOfMonth(calendar: Calendar = Calendar.getInstance()): String {
+        return calendar.get(Calendar.DAY_OF_MONTH).toString()
+    }
+
     @Composable
-    fun getOrdinalSuffix(calendar: Calendar): String {
+    fun getOrdinalSuffix(calendar: Calendar = Calendar.getInstance()): String {
         return stringResource(
             when(calendar.get(Calendar.DAY_OF_MONTH) % 10) {
                 1 -> R.string.st
@@ -40,10 +48,18 @@ object Date {
     }
 
     @Composable
-    fun getFormattedDate(): String {
-        Calendar.getInstance().also {
-            return getWeekday(it) + " " + it.get(Calendar.DAY_OF_MONTH).toString() + getOrdinalSuffix(it) + " " + getMonth(it)
-        }
+    fun getOrdinalConcatenation(calendar: Calendar = Calendar.getInstance()): String {
+        return getDayOfMonth(calendar) + getOrdinalSuffix(calendar)
+    }
+
+    @Composable
+    fun getMonthAndYear(calendar: Calendar = Calendar.getInstance()): String {
+        return getMonth(calendar) + " " + getYear(calendar)
+    }
+
+    @Composable
+    fun getWeekdayWithOrdinal(calendar: Calendar = Calendar.getInstance()): String {
+        return getWeekday(calendar) + " " + stringResource(R.string.the) + " " + getOrdinalConcatenation(calendar)
     }
 
 }

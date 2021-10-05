@@ -60,10 +60,9 @@ data class Quote(
                     text = stringResource(resource),
                     style = Typography.body1
                 )
-                Row(
+                Box(
                     modifier = Modifier.fillMaxWidth().wrapContentHeight(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                    contentAlignment = Alignment.CenterEnd
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_right_quote),

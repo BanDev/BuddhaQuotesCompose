@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -140,11 +141,11 @@ private fun DrawerButton(
                     .fillMaxWidth()
                     .height(30.dp)
             ) {
-                Image(
+                Icon(
                     imageVector = icon,
                     contentDescription = null, // decorative
-                    colorFilter = ColorFilter.tint(textIconColor),
-                    alpha = imageAlpha
+                    modifier = Modifier.alpha(imageAlpha),
+                    tint = textIconColor
                 )
                 Spacer(Modifier.width(16.dp))
                 Text(
