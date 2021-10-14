@@ -28,7 +28,6 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.ui.theme.DarkBackground
 import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
 import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
 
