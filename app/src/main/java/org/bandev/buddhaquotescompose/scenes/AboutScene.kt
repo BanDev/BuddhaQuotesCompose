@@ -2,6 +2,9 @@ package org.bandev.buddhaquotescompose.scenes
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,8 +15,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +36,8 @@ import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
 import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
+import org.bandev.buddhaquotescompose.ui.theme.Tabs
+import org.bandev.buddhaquotescompose.ui.theme.mediumTabIndicatorOffset
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class
@@ -47,13 +55,14 @@ fun AboutScene() {
             backgroundColor = MaterialTheme.colors.background,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    modifier = Modifier.mediumTabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = MaterialTheme.colors.primary
                 )
             }
         ) {
             pages.forEachIndexed { index, titleRes ->
                 Tab(
-                    text = { Text(stringResource(id = titleRes).uppercase()) },
+                    text = { Text(stringResource(id = titleRes)) },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         coroutineScope.launch {
