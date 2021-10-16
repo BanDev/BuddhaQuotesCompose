@@ -7,6 +7,8 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +25,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -34,10 +37,7 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
-import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
-import org.bandev.buddhaquotescompose.ui.theme.Tabs
-import org.bandev.buddhaquotescompose.ui.theme.mediumTabIndicatorOffset
+import org.bandev.buddhaquotescompose.ui.theme.*
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class
@@ -50,19 +50,30 @@ fun AboutScene() {
     val context = LocalContext.current
 
     Column(Modifier.fillMaxSize()) {
+
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             backgroundColor = MaterialTheme.colors.background,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    modifier = Modifier.mediumTabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    color = MaterialTheme.colors.primary
+                    modifier = Modifier
+                        .pagerTabIndicatorOffset(pagerState, tabPositions)
+                        .wrapContentSize(Alignment.BottomCenter)
+                        .width(120.dp)
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(topEnd = 13.dp, topStart = 13.dp)),
+                    color = MaterialTheme.colors.primary,
                 )
             }
         ) {
             pages.forEachIndexed { index, titleRes ->
                 Tab(
-                    text = { Text(stringResource(id = titleRes)) },
+                    text = {
+                        Text(
+                            stringResource(id = titleRes),
+                            style = MaterialTheme.typography.subtitle1,
+                        )
+                    },
                     selected = pagerState.currentPage == index,
                     onClick = {
                         coroutineScope.launch {
