@@ -1,33 +1,33 @@
 package org.bandev.buddhaquotescompose.scenes
 
-import androidx.compose.animation.AnimatedVisibility
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.TextSnippet
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.startActivity
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -36,8 +36,9 @@ import com.mikepenz.aboutlibraries.Libs
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
+import org.bandev.buddhaquotescompose.LibraryHelper
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.ui.theme.*
+import org.bandev.buddhaquotescompose.items.LibraryIcon
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class
@@ -47,6 +48,7 @@ fun AboutScene() {
     val pages = remember { listOf(R.string.about, R.string.libraries) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    var openDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Column(Modifier.fillMaxSize()) {
@@ -105,60 +107,99 @@ fun AboutScene() {
                 LazyColumn(Modifier.fillMaxSize()) {
                     items(Libs(context).libraries) { library ->
                         val license = library.licenses?.firstOrNull()
-                        var expanded by remember { mutableStateOf(false) }
-                        Card(
-                            onClick = { expanded = !expanded },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()
-                                .padding(10.dp),
-                            elevation = 4.dp,
-                            shape = RoundedCornerShape(11.dp),
-                            backgroundColor = LighterBackground
-                        ) {
-                            Column {
-                                Column(Modifier.padding(20.dp)) {
-                                    Row {
-                                        Text(
-                                            text = library.libraryName,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
-                                        )
-                                        Box(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            contentAlignment = Alignment.CenterEnd
-                                        ) {
-                                            Text(
-                                                text = library.libraryVersion,
-                                                color = Color.LightGray,
-                                                fontSize = 14.sp
-                                            )
-                                        }
-                                    }
+                        val sourceIcon = LibraryHelper.sourceIcon(library)
+                        val websiteIcon = LibraryHelper.websiteIcon(library)
+                        var repoLink = library.repositoryLink
+                        if (repoLink.endsWith("/")) repoLink = repoLink.substring(0, repoLink.length - 1)
+                        var libraryWebsite = library.libraryWebsite
+                        if (libraryWebsite.endsWith("/")) libraryWebsite = libraryWebsite.substring(0, libraryWebsite.length - 1)
+                        Column(Modifier.padding(20.dp)) {
+                            Row {
+                                if (library.libraryName.isNotEmpty()) {
                                     Text(
-                                        text = library.author,
-                                        color = Color.LightGray,
-                                        fontSize = 14.sp
+                                        text = library.libraryName,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
                                     )
-                                    if (license != null) {
+                                }
+                                if (library.libraryVersion.isNotEmpty()) {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.CenterEnd
+                                    ) {
                                         Text(
-                                            text = license.licenseName,
-                                            modifier = Modifier.padding(top = 10.dp),
+                                            text = library.libraryVersion,
                                             color = Color.LightGray,
                                             fontSize = 14.sp
                                         )
                                     }
                                 }
-                                if (license != null) {
-                                    AnimatedVisibility(visible = expanded) {
-                                        Column(Modifier.background(DarkerBackground)) {
-                                            MarkdownText(
-                                                markdown = license.licenseShortDescription,
-                                                modifier = Modifier.padding(20.dp),
-                                                color = Color.LightGray,
-                                                fontSize = 14.sp
-                                            )
-                                        }
+                            }
+                            if (library.author.isNotEmpty()) {
+                                Text(
+                                    text = library.author,
+                                    color = Color.LightGray,
+                                    fontSize = 14.sp
+                                )
+                            }
+                            if (license != null) {
+                                Text(
+                                    text = license.licenseName,
+                                    modifier = Modifier.padding(top = 10.dp),
+                                    color = Color.LightGray,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            if (license != null) {
+                                LibraryButton(
+                                    modifier = Modifier.weight(0.5f),
+                                    text = stringResource(id = R.string.license),
+                                    onClick = { openDialog = true },
+                                    libraryIcon = LibraryIcon(icon = Icons.Rounded.TextSnippet, size = 24.dp)
+                                )
+                            }
+                            if (library.libraryWebsite.isNotEmpty() && libraryWebsite != repoLink) {
+                                LibraryButton(
+                                    modifier = Modifier.weight(0.5f),
+                                    text = stringResource(id = R.string.website),
+                                    onClick = { linkToWebpage(context, library.libraryWebsite) },
+                                    libraryIcon = websiteIcon
+                                )
+                            }
+                            if (library.repositoryLink.isNotEmpty()) {
+                                LibraryButton(
+                                    modifier = Modifier.weight(0.5f),
+                                    text = stringResource(id = R.string.source),
+                                    onClick = { linkToWebpage(context, library.repositoryLink) },
+                                    libraryIcon = sourceIcon
+                                )
+                            }
+                        }
+                        Divider()
+                        if (openDialog) {
+                            Dialog(onDismissRequest = { openDialog = false }) {
+                                Box(
+                                    Modifier
+                                        .wrapContentHeight()
+                                        .width(width = 500.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(
+                                            color = MaterialTheme.colors.background,
+                                            shape = MaterialTheme.shapes.large
+                                        ),
+                                    contentAlignment = Alignment.CenterStart
+                                ) {
+                                    if (license != null) {
+                                        MarkdownText(
+                                            markdown = license.licenseShortDescription,
+                                            modifier = Modifier.padding(20.dp),
+                                            fontSize = 14.sp
+                                        )
                                     }
                                 }
                             }
@@ -167,5 +208,43 @@ fun AboutScene() {
                 }
             }
         }
+    }
+}
+
+fun linkToWebpage(context: Context, URI: String) {
+    val openURL = Intent(Intent.ACTION_VIEW)
+    openURL.data = Uri.parse(URI)
+    startActivity(context, openURL, null)
+}
+
+@Composable
+private fun LibraryButton(
+    modifier: Modifier,
+    text: String,
+    onClick: () -> Unit,
+    elevation: ButtonElevation =ButtonDefaults.elevation(
+        defaultElevation = 0.dp,
+        pressedElevation = 0.dp,
+        disabledElevation = 0.dp
+    ),
+    spacerDp: Dp = 5.dp,
+    shape: Shape = RoundedCornerShape(20.dp),
+    colors: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+    libraryIcon: LibraryIcon
+) {
+    Button(
+        modifier = modifier,
+        onClick = onClick,
+        elevation = elevation,
+        shape = shape,
+        colors = colors
+    ) {
+        Icon(
+            imageVector = libraryIcon.icon,
+            contentDescription = null,
+            modifier = Modifier.size(libraryIcon.size)
+        )
+        Spacer(Modifier.width(spacerDp))
+        Text(text = text)
     }
 }
