@@ -20,10 +20,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package org.bandev.buddhaquotescompose.items
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-data class LibraryIcon(
-    val icon: ImageVector,
-    val size: Dp
+data class LibraryIconVector(
+    val imageVector: ImageVector,
+    val size: Dp = 24.dp,
+    val tint: Color? = null
 )

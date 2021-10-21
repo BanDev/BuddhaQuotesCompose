@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.TextSnippet
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +36,8 @@ import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.LibraryHelper
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.items.LibraryIcon
+import org.bandev.buddhaquotescompose.items.LibraryIconPainter
+import org.bandev.buddhaquotescompose.items.LibraryIconVector
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class
@@ -107,12 +106,8 @@ fun AboutScene() {
                 LazyColumn(Modifier.fillMaxSize()) {
                     items(Libs(context).libraries) { library ->
                         val license = library.licenses?.firstOrNull()
-                        val sourceIcon = LibraryHelper.sourceIcon(library)
-                        val websiteIcon = LibraryHelper.websiteIcon(library)
-                        var repoLink = library.repositoryLink
-                        if (repoLink.endsWith("/")) repoLink = repoLink.substring(0, repoLink.length - 1)
-                        var libraryWebsite = library.libraryWebsite
-                        if (libraryWebsite.endsWith("/")) libraryWebsite = libraryWebsite.substring(0, libraryWebsite.length - 1)
+                        val repoLink = LibraryHelper.linkFixer(library.repositoryLink)
+                        val libraryWebsite = LibraryHelper.linkFixer(library.libraryWebsite)
                         Column(Modifier.padding(20.dp)) {
                             Row {
                                 if (library.libraryName.isNotEmpty()) {
@@ -150,6 +145,14 @@ fun AboutScene() {
                                     fontSize = 14.sp
                                 )
                             }
+                            if (library.libraryDescription.isNotEmpty()) {
+                                Text(
+                                    text = library.libraryDescription,
+                                    modifier = Modifier.padding(top = 10.dp),
+                                    color = Color.LightGray,
+                                    fontSize = 14.sp
+                                )
+                            }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -160,23 +163,23 @@ fun AboutScene() {
                                     modifier = Modifier.weight(0.5f),
                                     text = stringResource(id = R.string.license),
                                     onClick = { openDialog = true },
-                                    libraryIcon = LibraryIcon(icon = Icons.Rounded.TextSnippet, size = 24.dp)
+                                    libraryIcon = LibraryHelper.licenseIcon(license)
                                 )
                             }
                             if (library.libraryWebsite.isNotEmpty() && libraryWebsite != repoLink) {
                                 LibraryButton(
                                     modifier = Modifier.weight(0.5f),
                                     text = stringResource(id = R.string.website),
-                                    onClick = { linkToWebpage(context, library.libraryWebsite) },
-                                    libraryIcon = websiteIcon
+                                    onClick = { linkToWebpage(context, libraryWebsite) },
+                                    libraryIcon = LibraryHelper.websiteIcon(library)
                                 )
                             }
                             if (library.repositoryLink.isNotEmpty()) {
                                 LibraryButton(
                                     modifier = Modifier.weight(0.5f),
                                     text = stringResource(id = R.string.source),
-                                    onClick = { linkToWebpage(context, library.repositoryLink) },
-                                    libraryIcon = sourceIcon
+                                    onClick = { linkToWebpage(context, repoLink) },
+                                    libraryIcon = LibraryHelper.sourceIcon(library)
                                 )
                             }
                         }
@@ -230,7 +233,7 @@ private fun LibraryButton(
     spacerDp: Dp = 5.dp,
     shape: Shape = RoundedCornerShape(20.dp),
     colors: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-    libraryIcon: LibraryIcon
+    libraryIcon: Any
 ) {
     Button(
         modifier = modifier,
@@ -239,11 +242,20 @@ private fun LibraryButton(
         shape = shape,
         colors = colors
     ) {
-        Icon(
-            imageVector = libraryIcon.icon,
-            contentDescription = null,
-            modifier = Modifier.size(libraryIcon.size)
-        )
+        if (libraryIcon is LibraryIconPainter) {
+            Image(
+                painter = painterResource(id = libraryIcon.drawable),
+                contentDescription = null,
+                modifier = Modifier.size(libraryIcon.size)
+            )
+        } else if (libraryIcon is LibraryIconVector) {
+            Icon(
+                imageVector = libraryIcon.imageVector,
+                contentDescription = null,
+                modifier = Modifier.size(libraryIcon.size),
+                tint = libraryIcon.tint ?: LocalContentColor.current
+            )
+        }
         Spacer(Modifier.width(spacerDp))
         Text(text = text)
     }
