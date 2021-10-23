@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
  */
 
-package org.bandev.buddhaquotescompose
+package org.bandev.buddhaquotescompose.scenes.about
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Android
@@ -36,8 +36,7 @@ import compose.icons.simpleicons.Freebsd
 import compose.icons.simpleicons.Github
 import compose.icons.simpleicons.Jetbrains
 import compose.icons.simpleicons.Sourceforge
-import org.bandev.buddhaquotescompose.items.LibraryIconPainter
-import org.bandev.buddhaquotescompose.items.LibraryIconVector
+import org.bandev.buddhaquotescompose.R
 
 object LibraryHelper {
     private const val androidDeveloperWebsite = "developer.android.com"

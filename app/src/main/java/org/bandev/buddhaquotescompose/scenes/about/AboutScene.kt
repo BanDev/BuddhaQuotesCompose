@@ -1,4 +1,4 @@
-package org.bandev.buddhaquotescompose.scenes
+package org.bandev.buddhaquotescompose.scenes.about
 
 import android.content.Context
 import android.content.Intent
@@ -34,10 +34,10 @@ import com.mikepenz.aboutlibraries.Libs
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
-import org.bandev.buddhaquotescompose.LibraryHelper
+import org.bandev.buddhaquotescompose.scenes.about.LibraryHelper
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.items.LibraryIconPainter
-import org.bandev.buddhaquotescompose.items.LibraryIconVector
+import org.bandev.buddhaquotescompose.scenes.about.LibraryIconPainter
+import org.bandev.buddhaquotescompose.scenes.about.LibraryIconVector
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class

@@ -23,6 +23,7 @@ import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.scenes.*
+import org.bandev.buddhaquotescompose.scenes.about.AboutScene
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.settings.boolify
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme

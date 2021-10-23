@@ -18,12 +18,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
  */
 
-package org.bandev.buddhaquotescompose.items
+package org.bandev.buddhaquotescompose.scenes.about
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class LibraryIconPainter(
-    val drawable: Int,
-    val size: Dp = 20.dp
+data class LibraryIconVector(
+    val imageVector: ImageVector,
+    val size: Dp = 24.dp,
+    val tint: Color? = null
 )
