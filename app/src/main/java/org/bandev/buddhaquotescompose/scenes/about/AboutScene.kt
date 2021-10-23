@@ -32,6 +32,7 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.mikepenz.aboutlibraries.Libs
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import io.iamjosephmj.flinger.bahaviours.StockFlingBehaviours
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.scenes.about.LibraryHelper
@@ -103,7 +104,10 @@ fun AboutScene() {
                     Text(text = BuildConfig.VERSION_NAME)
                 }
             } else if (page == 1) {
-                LazyColumn(Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    flingBehavior = StockFlingBehaviours.smoothScroll()
+                ) {
                     items(Libs(context).libraries) { library ->
                         val license = library.licenses?.firstOrNull()
                         val repoLink = LibraryHelper.linkFixer(library.repositoryLink)
@@ -235,7 +239,7 @@ private fun LibraryButton(
     colors: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
     libraryIcon: Any
 ) {
-    Button(
+    TextButton(
         modifier = modifier,
         onClick = onClick,
         elevation = elevation,

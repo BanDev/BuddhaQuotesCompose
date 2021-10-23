@@ -23,8 +23,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -89,6 +89,9 @@ dependencies {
     // Datastore
     implementation 'androidx.datastore:datastore:1.0.0'
     implementation "com.google.protobuf:protobuf-javalite:$protobuf_version"
+
+    // Flinger - https://github.com/iamjosephmj/flinger
+    implementation 'com.github.iamjosephmj:Flinger:1.1.1'
 
     // Hilt - https://developer.android.com/training/dependency-injection/hilt-android
     implementation "com.google.dagger:hilt-android:$hilt_version"
