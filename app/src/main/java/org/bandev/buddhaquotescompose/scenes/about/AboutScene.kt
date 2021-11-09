@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.LibraryBooks
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,13 +34,9 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.mikepenz.aboutlibraries.Libs
 import dev.jeziellago.compose.markdowntext.MarkdownText
-import io.iamjosephmj.flinger.bahaviours.StockFlingBehaviours
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
-import org.bandev.buddhaquotescompose.scenes.about.LibraryHelper
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.scenes.about.LibraryIconPainter
-import org.bandev.buddhaquotescompose.scenes.about.LibraryIconVector
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class
@@ -104,10 +102,7 @@ fun AboutScene() {
                     Text(text = BuildConfig.VERSION_NAME)
                 }
             } else if (page == 1) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    flingBehavior = StockFlingBehaviours.smoothScroll()
-                ) {
+                LazyColumn(Modifier.fillMaxSize()) {
                     items(Libs(context).libraries) { library ->
                         val license = library.licenses?.firstOrNull()
                         val repoLink = LibraryHelper.linkFixer(library.repositoryLink)

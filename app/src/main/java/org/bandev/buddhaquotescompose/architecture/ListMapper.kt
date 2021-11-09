@@ -46,14 +46,14 @@ class ListMapper(val application: Application) {
             ListIcon(
                 0,
                 Icons.Rounded.FavoriteBorder,
-                Color.Red
+                Color.Blue
             )
         )
         listIcons.add(
             ListIcon(
                 1,
                 Icons.Rounded.List,
-                Color.Red
+                Color.Green
             )
         )
         listIcons.add(
@@ -67,21 +67,21 @@ class ListMapper(val application: Application) {
             ListIcon(
                 3,
                 Icons.Rounded.History,
-                Color.Red
+                Color.Yellow
             )
         )
         listIcons.add(
             ListIcon(
                 4,
                 Icons.Rounded.HolidayVillage,
-                Color.Red
+                Color.Cyan
             )
         )
         listIcons.add(
             ListIcon(
                 5,
                 Icons.Rounded.FormatQuote,
-                Color.Red
+                Color.Magenta
             )
         )
         listIcons.add(

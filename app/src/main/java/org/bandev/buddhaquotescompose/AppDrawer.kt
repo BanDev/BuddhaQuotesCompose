@@ -23,84 +23,44 @@ fun AppDrawer(
     currentScreen: String,
     closeDrawer: () -> Unit
 ) {
-    val topDrawerButtons = arrayOf(
-        DrawerButtonData(
-            icon = Icons.Rounded.FormatQuote,
-            label = "Home",
-            isSelected = currentScreen == Scene.Home.route,
-            route = scenes[0].route
-        ),
-        DrawerButtonData(
-            icon = Icons.Rounded.FormatListBulleted,
-            label = "Lists",
-            isSelected = currentScreen == Scene.Lists.route,
-            route = scenes[1].route
-        ),
-        DrawerButtonData(
-            icon = Icons.Rounded.CalendarToday,
-            label = "Daily Quote",
-            isSelected = currentScreen == Scene.DailyQuote.route,
-            route = scenes[3].route
-        ),
-        DrawerButtonData(
-            icon = Icons.Rounded.SelfImprovement,
-            label = "Meditate",
-            isSelected = currentScreen == Scene.Meditate.route,
-            route = scenes[4].route
-        )
-    )
-
-    val bottomDrawerButtons = arrayOf(
-        DrawerButtonData(
-            icon = Icons.Rounded.Settings,
-            label = "Settings",
-            isSelected = currentScreen == Scene.Settings.route,
-            route = scenes[5].route
-        ),
-        DrawerButtonData(
-            icon = Icons.Rounded.Info,
-            label = "About",
-            isSelected = currentScreen == Scene.About.route,
-            route = scenes[6].route
-        )
-    )
-
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.background)) {
-        LazyColumn(Modifier.fillMaxWidth()) {
-            items(topDrawerButtons) { drawerButton ->
-                DrawerButton(
-                    icon = drawerButton.icon,
-                    label = drawerButton.label,
-                    isSelected = drawerButton.isSelected,
-                    action = {
-                        navigateTo(drawerButton.route)
-                        closeDrawer()
-                    }
-                )
+    DrawerButtonList(currentScreen).also {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)) {
+            LazyColumn(Modifier.fillMaxWidth()) {
+                items(it.topDrawerButtons) { drawerButton ->
+                    DrawerButton(
+                        icon = drawerButton.icon,
+                        label = drawerButton.label,
+                        isSelected = drawerButton.isSelected,
+                        action = {
+                            navigateTo(drawerButton.route)
+                            closeDrawer()
+                        }
+                    )
+                }
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .padding(bottom = 8.dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            Column {
-                Divider()
-                LazyColumn(Modifier.fillMaxWidth()) {
-                    items(bottomDrawerButtons) { drawerButton ->
-                        DrawerButton(
-                            icon = drawerButton.icon,
-                            label = drawerButton.label,
-                            isSelected = drawerButton.isSelected,
-                            action = {
-                                navigateTo(drawerButton.route)
-                                closeDrawer()
-                            }
-                        )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+                    .padding(bottom = 8.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Column {
+                    Divider()
+                    LazyColumn(Modifier.fillMaxWidth()) {
+                        items(it.bottomDrawerButtons) { drawerButton ->
+                            DrawerButton(
+                                icon = drawerButton.icon,
+                                label = drawerButton.label,
+                                isSelected = drawerButton.isSelected,
+                                action = {
+                                    navigateTo(drawerButton.route)
+                                    closeDrawer()
+                                }
+                            )
+                        }
                     }
                 }
             }

@@ -90,9 +90,6 @@ dependencies {
     implementation 'androidx.datastore:datastore:1.0.0'
     implementation "com.google.protobuf:protobuf-javalite:$protobuf_version"
 
-    // Flinger - https://github.com/iamjosephmj/flinger
-    implementation 'com.github.iamjosephmj:Flinger:1.1.1'
-
     // Hilt - https://developer.android.com/training/dependency-injection/hilt-android
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"

@@ -16,13 +16,18 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.insets.statusBarsPadding
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
@@ -67,117 +72,51 @@ fun HomeScene(
                 )
             }
     )
-    Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
+    Column(Modifier.fillMaxWidth()) {
+        Spacer(Modifier.statusBarsPadding())
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(30.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.image_anahata),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            alpha = 0.1f
+        )
         Crossfade(targetState = quote) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = Shapes.medium,
-                elevation = 4.dp,
-            ) {
-                Column(Modifier.padding(20.dp)) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_left_quote),
-                        contentDescription = null,
-                    )
-                    Text(
-                        text = stringResource(it.resource),
-                        style = Typography.body1
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_right_quote),
-                            contentDescription = null,
-                        )
-                    }
+            Column(Modifier.padding(20.dp)) {
+                Text(
+                    text = stringResource(it.resource),
+                    fontSize = 26.sp,
+                    lineHeight = 35.sp,
+                    style = Typography.body1
+                )
+                Spacer(Modifier.size(10.dp))
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
                     Text(
                         text = stringResource(R.string.attribution_buddha),
+                        color = Color.Gray,
+                        fontStyle = FontStyle.Italic,
                         style = Typography.caption
                     )
-                }
-            }
-        }
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.image_anahata),
-                contentDescription = null,
-                modifier = Modifier.size(200.dp)
-            )
-            Card(
-                modifier = Modifier.padding(20.dp),
-                shape = RoundedCornerShape(20.dp),
-                elevation = 4.dp
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    IconButton(
-                        onClick = {
-                            viewModel.Quotes().getRandom {
-                                quote = it
-                                isLiked = quote.liked
-                            }
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ChevronLeft,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            context.shareQuote(quote = quote)
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Share,
-                            contentDescription = null
-                        )
-                    }
-                    FavoriteButton(
-                        isChecked = isLiked,
-                        onClick = {
-                            isLiked = !isLiked
-                            viewModel.Quotes().setLike(quote.id, isLiked)
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.AddCircleOutline,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            viewModel.Quotes().getRandom {
-                                quote = it
-                                isLiked = quote.liked
-                            }
-                        },
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ChevronRight,
-                            contentDescription = null
-                        )
-                    }
                 }
             }
         }
