@@ -21,7 +21,7 @@ buildscript {
     }
 
     ext {
-        accompanist_version = '0.20.3'
+        accompanist_version = '0.23.0'
         compose_version = '1.0.4'
         coroutines_version = '1.6.0'
         hilt_version = '2.40.5'
