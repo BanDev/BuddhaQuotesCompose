@@ -24,7 +24,7 @@ buildscript {
         accompanist_version = '0.23.0'
         compose_version = '1.0.4'
         coroutines_version = '1.6.0'
-        hilt_version = '2.40.5'
+        hilt_version = '2.41'
         lifecycle_version = '2.3.1'
         protobuf_version = '3.19.4'
         room_version = '2.3.0'
