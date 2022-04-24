@@ -82,7 +82,7 @@ dependencies {
     implementation 'br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0'
 
     // Compose Markdown - https://github.com/jeziellago/compose-markdown
-    implementation 'com.github.jeziellago:compose-markdown:0.2.6'
+    implementation 'com.github.jeziellago:compose-markdown:0.2.9'
 
     // Compose Settings - https://github.com/alorma/Compose-Settings
     implementation 'com.github.alorma:compose-settings-ui:0.6.0'
