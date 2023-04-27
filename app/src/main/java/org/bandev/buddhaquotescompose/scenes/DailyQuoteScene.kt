@@ -115,7 +115,7 @@ fun DailyQuoteScene(
                         )
                     }
                     FavoriteButton(
-                        isChecked = isLiked,
+                        checked = isLiked,
                         onClick = {
                             isLiked = !isLiked
                             viewModel.Quotes().setLike(quote.id, isLiked)

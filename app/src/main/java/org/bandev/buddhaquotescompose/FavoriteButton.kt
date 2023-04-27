@@ -19,20 +19,18 @@ import org.bandev.buddhaquotescompose.ui.theme.heart
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun FavoriteButton(
-    isChecked: Boolean,
+    checked: Boolean,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
     IconToggleButton(
-        checked = isChecked,
+        checked = checked,
         onCheckedChange = { onClick() },
         modifier = modifier
     ) {
-        val transition = updateTransition(isChecked, label = "Checked indicator")
+        val transition = updateTransition(checked, label = "Checked indicator")
 
-        val tint by transition.animateColor(
-            label = "Tint"
-        ) { isChecked ->
+        val tint by transition.animateColor(label = "Tint") { isChecked ->
             if (isChecked) heart else LocalContentColor.current
         }
 
@@ -54,7 +52,7 @@ fun FavoriteButton(
         ) { 24.dp }
 
         Icon(
-            imageVector = if (isChecked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+            imageVector = if (checked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
             contentDescription = null,
             tint = tint,
             modifier = Modifier.size(size)

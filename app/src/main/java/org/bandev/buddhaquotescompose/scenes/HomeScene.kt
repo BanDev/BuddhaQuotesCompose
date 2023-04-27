@@ -20,7 +20,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.bandev.buddhaquotescompose.FavoriteButton
@@ -148,7 +147,7 @@ fun HomeScene(
                         )
                     }
                     FavoriteButton(
-                        isChecked = isLiked,
+                        checked = isLiked,
                         onClick = {
                             isLiked = !isLiked
                             viewModel.Quotes().setLike(quote.id, isLiked)

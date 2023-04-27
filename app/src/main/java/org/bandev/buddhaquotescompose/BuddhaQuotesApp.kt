@@ -33,7 +33,7 @@ import org.bandev.buddhaquotescompose.scenes.MeditateScene
 import org.bandev.buddhaquotescompose.scenes.SettingsScene
 import org.bandev.buddhaquotescompose.scenes.about.AboutScene
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
-import org.bandev.buddhaquotescompose.settings.boolify
+import org.bandev.buddhaquotescompose.settings.toBoolean
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 
@@ -41,7 +41,7 @@ import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 fun BuddhaQuotesApp() {
     val settings = SettingsViewModel(LocalContext.current)
 
-    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().boolify()) {
+    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().toBoolean()) {
         EdgeToEdgeContent {
             var toolbarTitle by remember { mutableStateOf(R.string.app_name) }
             val navController = rememberNavController()

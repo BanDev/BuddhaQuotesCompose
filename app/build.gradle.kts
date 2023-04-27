@@ -86,11 +86,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
-    // Compose Markdown - https://github.com/jeziellago/compose-markdown
-    implementation("com.github.jeziellago:compose-markdown:0.3.0")
-
     // Compose Settings - https://github.com/alorma/Compose-Settings
-    implementation("com.github.alorma:compose-settings-ui:0.6.0")
+    implementation("com.github.alorma:compose-settings-ui:0.26.0")
 
     // Datastore
     implementation("androidx.datastore:datastore:1.0.0")
@@ -108,7 +105,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     // Room - https://developer.android.com/training/data-storage/room
-    val roomVersion="2.5.1"
+    val roomVersion = "2.5.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
@@ -117,7 +114,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.15.8"
+        artifact = "com.google.protobuf:protoc:3.22.3"
     }
     generateProtoTasks {
         all().forEach {
