@@ -2,8 +2,14 @@ package org.bandev.buddhaquotescompose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -16,13 +22,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.rememberInsetsPaddingValues
+import kotlinx.coroutines.launch
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
-import kotlinx.coroutines.launch
-import org.bandev.buddhaquotescompose.scenes.*
+import org.bandev.buddhaquotescompose.scenes.DailyQuoteScene
+import org.bandev.buddhaquotescompose.scenes.HomeScene
+import org.bandev.buddhaquotescompose.scenes.InsideListScene
+import org.bandev.buddhaquotescompose.scenes.ListsScene
+import org.bandev.buddhaquotescompose.scenes.MeditateScene
+import org.bandev.buddhaquotescompose.scenes.SettingsScene
 import org.bandev.buddhaquotescompose.scenes.about.AboutScene
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.settings.boolify
@@ -53,12 +61,9 @@ fun BuddhaQuotesApp() {
                             )
                         }
                     },
-                    contentPadding = rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.statusBars,
-                        applyStart = true,
-                        applyTop = true,
-                        applyEnd = true,
-                    ),
+                    contentPadding = WindowInsets.statusBars
+                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                        .asPaddingValues(),
                     backgroundColor = MaterialTheme.colors.background,
                     contentColor = MaterialTheme.colors.onBackground,
                     elevation = 0.dp
@@ -68,7 +73,7 @@ fun BuddhaQuotesApp() {
                     bottomBar = {
                         Spacer(
                             modifier = Modifier
-                                .navigationBarsHeight()
+                                .navigationBarsPadding()
                                 .fillMaxWidth()
                         )
                     },

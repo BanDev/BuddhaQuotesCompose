@@ -8,7 +8,6 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 internal const val SpringDefaultDampingRatio = Spring.DampingRatioMediumBouncy
@@ -54,5 +53,5 @@ fun EdgeToEdgeContent(content: @Composable () -> Unit) {
     SideEffect {
         controller.setSystemBarsColor(color = Color.Transparent, darkIcons = isLightTheme)
     }
-    ProvideWindowInsets(content = content)
+    content()
 }

@@ -1,34 +1,31 @@
 package org.bandev.buddhaquotescompose.scenes.about
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.R
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AboutScene() {
     val pages = remember { listOf(R.string.about, R.string.libraries) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    var openDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     Column(Modifier.fillMaxSize()) {
 
@@ -65,7 +62,7 @@ fun AboutScene() {
             }
         }
 
-        HorizontalPager(count = pages.size, state = pagerState) { page ->
+        HorizontalPager(pageCount = pages.size, state = pagerState) { page ->
             if (page == 0) {
                 Column(
                     modifier = Modifier

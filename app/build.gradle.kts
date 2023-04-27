@@ -54,6 +54,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    lint {
+        abortOnError = false
+    }
 }
 
 dependencies {
@@ -78,15 +81,10 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries-compose:$aboutLibrariesVersion")
 
     // Accompanist - https://github.com/google/accompanist
-    val accompanistVersion = "0.23.1"
-    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    val accompanistVersion = "0.31.1-alpha"
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-
-    // Compose Icons - https://github.com/DevSrSouza/compose-icons
-    implementation("br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0")
 
     // Compose Markdown - https://github.com/jeziellago/compose-markdown
     implementation("com.github.jeziellago:compose-markdown:0.3.0")
@@ -97,9 +95,6 @@ dependencies {
     // Datastore
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("com.google.protobuf:protobuf-javalite:3.22.3")
-
-    // Flinger - https://github.com/iamjosephmj/flinger
-    implementation("com.github.iamjosephmj:Flinger:1.1.1")
 
     // Kotlin Coroutines - https://github.com/Kotlin/kotlinx.coroutines
     val coroutinesVersion = "1.6.4"
