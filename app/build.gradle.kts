@@ -1,11 +1,16 @@
+import com.google.protobuf.gradle.id
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
+    id("com.google.protobuf")
     id("com.mikepenz.aboutlibraries.plugin")
 }
 
 android {
+    namespace = "org.bandev.buddhaquotescompose"
+
     compileSdk = 33
 
     defaultConfig {
@@ -16,6 +21,12 @@ android {
         versionName = "1.0"
 
         vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -43,7 +54,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    namespace = "org.bandev.buddhaquotescompose"
 }
 
 dependencies {
@@ -63,15 +73,17 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     // AboutLibraries - https://github.com/mikepenz/AboutLibraries
-    implementation("com.mikepenz:aboutlibraries-core:8.9.4")
+    val aboutLibrariesVersion = "10.6.2"
+    implementation("com.mikepenz:aboutlibraries-core:$aboutLibrariesVersion")
+    implementation("com.mikepenz:aboutlibraries-compose:$aboutLibrariesVersion")
 
     // Accompanist - https://github.com/google/accompanist
-    val accompanist_version = "0.23.1"
-    implementation("com.google.accompanist:accompanist-insets:$accompanist_version")
-    implementation("com.google.accompanist:accompanist-insets-ui:$accompanist_version")
-    implementation("com.google.accompanist:accompanist-pager:$accompanist_version")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanist_version")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist_version")
+    val accompanistVersion = "0.23.1"
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     // Compose Icons - https://github.com/DevSrSouza/compose-icons
     implementation("br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0")
@@ -90,19 +102,35 @@ dependencies {
     implementation("com.github.iamjosephmj:Flinger:1.1.1")
 
     // Kotlin Coroutines - https://github.com/Kotlin/kotlinx.coroutines
-    val coroutines_version = "1.6.4"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+    val coroutinesVersion = "1.6.4"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
 
     // Lifecycle - https://developer.android.com/jetpack/androidx/releases/lifecycle
-    val lifecycle_version = "2.6.1"
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    val lifecycleVersion = "2.6.1"
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     // Room - https://developer.android.com/training/data-storage/room
-    val room_version="2.4.3"
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
+    val roomVersion="2.5.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.15.8"
+    }
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                id("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

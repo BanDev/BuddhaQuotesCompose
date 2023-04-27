@@ -30,7 +30,6 @@ import org.bandev.buddhaquotescompose.ui.theme.Typography
 fun DailyQuoteScene(
     viewModel: BuddhaQuotesViewModel = viewModel(),
 ) {
-
     var quote by remember { mutableStateOf(Quote(1, R.string.blank, false)) }
 
     LaunchedEffect(
