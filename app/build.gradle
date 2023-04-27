@@ -86,7 +86,7 @@ dependencies {
     implementation 'com.github.jeziellago:compose-markdown:0.3.0'
 
     // Compose Settings - https://github.com/alorma/Compose-Settings
-    implementation 'com.github.alorma:compose-settings-ui:0.6.0'
+    implementation 'com.github.alorma:compose-settings-ui:0.26.0'
 
     // Datastore
     implementation 'androidx.datastore:datastore:1.0.0'
