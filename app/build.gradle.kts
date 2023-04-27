@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.activity:activity-compose:1.7.1")
@@ -83,11 +83,10 @@ dependencies {
     // Accompanist - https://github.com/google/accompanist
     val accompanistVersion = "0.31.1-alpha"
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     // Compose Settings - https://github.com/alorma/Compose-Settings
-    implementation("com.github.alorma:compose-settings-ui:0.26.0")
+    implementation("com.github.alorma:compose-settings-ui-m3:0.26.0")
 
     // Datastore
     implementation("androidx.datastore:datastore:1.0.0")

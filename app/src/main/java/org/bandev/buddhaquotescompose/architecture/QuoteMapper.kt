@@ -47,7 +47,7 @@ object QuoteMapper {
     }
 
     /** Get a quote resource */
-    fun resource(id: Int): Int = quotes.getValue(id)
+    private fun resource(id: Int): Int = quotes.getValue(id)
 
     /** Hash map of all quotes in the app */
     var quotes: Map<Int, Int> = mapOf(

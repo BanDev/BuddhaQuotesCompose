@@ -14,12 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.FormatListBulleted
@@ -27,6 +21,12 @@ import androidx.compose.material.icons.rounded.FormatQuote
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.SelfImprovement
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +34,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import org.bandev.buddhaquotescompose.items.DrawerButtonData
+import org.bandev.buddhaquotescompose.items.DrawerButton
 
 @Composable
 fun AppDrawer(
@@ -43,25 +43,25 @@ fun AppDrawer(
     closeDrawer: () -> Unit
 ) {
     val topDrawerButtons = arrayOf(
-        DrawerButtonData(
+        DrawerButton(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",
             isSelected = currentScreen == Scene.Home.route,
             route = scenes[0].route
         ),
-        DrawerButtonData(
+        DrawerButton(
             icon = Icons.Rounded.FormatListBulleted,
             label = "Lists",
             isSelected = currentScreen == Scene.Lists.route,
             route = scenes[1].route
         ),
-        DrawerButtonData(
+        DrawerButton(
             icon = Icons.Rounded.CalendarToday,
             label = "Daily Quote",
             isSelected = currentScreen == Scene.DailyQuote.route,
             route = scenes[3].route
         ),
-        DrawerButtonData(
+        DrawerButton(
             icon = Icons.Rounded.SelfImprovement,
             label = "Meditate",
             isSelected = currentScreen == Scene.Meditate.route,
@@ -70,13 +70,13 @@ fun AppDrawer(
     )
 
     val bottomDrawerButtons = arrayOf(
-        DrawerButtonData(
+        DrawerButton(
             icon = Icons.Rounded.Settings,
             label = "Settings",
             isSelected = currentScreen == Scene.Settings.route,
             route = scenes[5].route
         ),
-        DrawerButtonData(
+        DrawerButton(
             icon = Icons.Rounded.Info,
             label = "About",
             isSelected = currentScreen == Scene.About.route,
@@ -86,7 +86,7 @@ fun AppDrawer(
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colors.background)) {
+        .background(MaterialTheme.colorScheme.background)) {
         LazyColumn(Modifier.fillMaxWidth()) {
             items(topDrawerButtons) { drawerButton ->
                 DrawerButton(
@@ -135,7 +135,7 @@ private fun DrawerButton(
     action: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val colors = MaterialTheme.colors
+    val colors = MaterialTheme.colorScheme
     val imageAlpha = if (isSelected) 1f else 0.6f
     val textIconColor = if (isSelected) colors.primary else colors.onSurface.copy(alpha = 0.6f)
     val backgroundColor = if (isSelected) colors.primary.copy(alpha = 0.12f) else Color.Transparent
@@ -167,7 +167,7 @@ private fun DrawerButton(
                 Spacer(Modifier.width(16.dp))
                 Text(
                     text = label,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = textIconColor
                 )
             }

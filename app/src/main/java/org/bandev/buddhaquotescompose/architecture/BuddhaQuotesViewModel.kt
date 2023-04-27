@@ -70,7 +70,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         /** Get a random quote */
         fun getRandom(after: (quote: Quote) -> Unit) {
             count { size ->
-                get((1..size).random()) { quote -> after(quote) }
+                get((1..size).random(), after)
             }
         }
 

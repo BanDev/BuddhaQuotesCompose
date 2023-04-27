@@ -10,12 +10,23 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.AddCircleOutline
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,7 +38,6 @@ import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.Quote
 import org.bandev.buddhaquotescompose.ui.theme.Shapes
-import org.bandev.buddhaquotescompose.ui.theme.Typography
 import org.bandev.buddhaquotescompose.ui.theme.heart
 
 @Composable
@@ -60,30 +70,29 @@ fun HomeScene(
                         isAnimating = true
                         if (!isLiked) {
                             isLiked = !isLiked
-                            viewModel.Quotes().setLike(quote.id, isLiked)
+                            viewModel
+                                .Quotes()
+                                .setLike(quote.id, isLiked)
                         }
                     }
                 )
             }
     )
     Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
-        Crossfade(targetState = quote) {
+        Crossfade(targetState = quote, label = "fade") {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 shape = Shapes.medium,
-                elevation = 4.dp,
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(Modifier.padding(20.dp)) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_left_quote),
                         contentDescription = null,
                     )
-                    Text(
-                        text = stringResource(it.resource),
-                        style = Typography.body1
-                    )
+                    Text(text = stringResource(it.resource))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -95,10 +104,7 @@ fun HomeScene(
                             contentDescription = null,
                         )
                     }
-                    Text(
-                        text = stringResource(R.string.attribution_buddha),
-                        style = Typography.caption
-                    )
+                    Text(text = stringResource(R.string.attribution_buddha))
                 }
             }
         }
@@ -114,8 +120,7 @@ fun HomeScene(
             )
             Card(
                 modifier = Modifier.padding(20.dp),
-                shape = RoundedCornerShape(20.dp),
-                elevation = 4.dp
+                shape = RoundedCornerShape(20.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

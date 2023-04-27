@@ -20,8 +20,4 @@ class MainActivity : ComponentActivity() {
             BuddhaQuotesApp()
         }
     }
-
-    companion object {
-        const val splashFadeDurationMillis = 300
-    }
 }

@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -54,7 +58,17 @@ fun BuddhaQuotesApp() {
                 TopAppBar(
                     title = { Text(stringResource(toolbarTitle)) },
                     navigationIcon = {
-                        IconButton(onClick = { coroutineScope.launch { if (scaffoldState.drawerState.isClosed) scaffoldState.drawerState.open() else scaffoldState.drawerState.close() } }) {
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    if (scaffoldState.drawerState.isClosed) {
+                                        scaffoldState.drawerState.open()
+                                    } else {
+                                        scaffoldState.drawerState.close()
+                                    }
+                                }
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Rounded.Menu,
                                 contentDescription = null
@@ -64,8 +78,8 @@ fun BuddhaQuotesApp() {
                     contentPadding = WindowInsets.statusBars
                         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
                         .asPaddingValues(),
-                    backgroundColor = MaterialTheme.colors.background,
-                    contentColor = MaterialTheme.colors.onBackground,
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.background,
                     elevation = 0.dp
                 )
                 Scaffold(

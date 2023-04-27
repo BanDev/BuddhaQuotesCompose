@@ -3,10 +3,18 @@ package org.bandev.buddhaquotescompose
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Remove
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -50,9 +58,6 @@ internal fun Timer(
     )
 
     Card(
-        elevation = 2.dp,
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = cardHorizontalPadding)
@@ -120,9 +125,9 @@ private fun StartCancelTimerButton(isTimerStarted: Boolean, enabled: Boolean, on
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         enabled = enabled,
-        border = if (isTimerStarted) ButtonDefaults.outlinedBorder else null,
+        border = if (isTimerStarted) ButtonDefaults.outlinedButtonBorder else null,
         colors = if (!isTimerStarted) ButtonDefaults.buttonColors() else ButtonDefaults.outlinedButtonColors(),
-        elevation = if (isTimerStarted) null else ButtonDefaults.elevation()
+        elevation = if (isTimerStarted) null else ButtonDefaults.buttonElevation()
     ) {
         Text(text = if (!isTimerStarted) "START" else "CANCEL")
     }
@@ -159,19 +164,19 @@ private fun Counter(
     Column(modifier = modifier) {
         Text(
             text = label,
-            style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = String.format("%02d", value),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.weight(1f)
             )
             IconButton(onClick = { onValueChange(value + 1) }) {
                 Icon(
                     imageVector = Icons.Rounded.Add,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "Increment $label"
                 )
             }
@@ -179,7 +184,7 @@ private fun Counter(
             IconButton(onClick = { onValueChange(value - 1) }) {
                 Icon(
                     imageVector = Icons.Rounded.Remove,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = "Decrease $label"
                 )
             }

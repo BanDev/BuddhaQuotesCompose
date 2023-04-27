@@ -3,13 +3,13 @@ package org.bandev.buddhaquotescompose.scenes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +24,6 @@ import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.Quote
 import org.bandev.buddhaquotescompose.ui.theme.Shapes
-import org.bandev.buddhaquotescompose.ui.theme.Typography
 
 @Composable
 fun DailyQuoteScene(
@@ -45,8 +44,7 @@ fun DailyQuoteScene(
     Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = Shapes.medium,
-            elevation = 4.dp,
+            shape = Shapes.medium
         ) {
             Column(Modifier.padding(20.dp)) {
                 Row(Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
@@ -59,20 +57,11 @@ fun DailyQuoteScene(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.End
                     ) {
-                        Text(
-                            text = Date.getWeekdayWithOrdinal(),
-                            style = Typography.caption
-                        )
-                        Text(
-                            text = Date.getMonthAndYear(),
-                            style = Typography.caption
-                        )
+                        Text(text = Date.getWeekdayWithOrdinal())
+                        Text(text = Date.getMonthAndYear())
                     }
                 }
-                Text(
-                    text = stringResource(quote.resource),
-                    style = Typography.body1
-                )
+                Text(text = stringResource(quote.resource))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,10 +73,7 @@ fun DailyQuoteScene(
                         contentDescription = null,
                     )
                 }
-                Text(
-                    text = stringResource(R.string.attribution_buddha),
-                    style = Typography.caption
-                )
+                Text(text = stringResource(R.string.attribution_buddha))
             }
         }
         Box(
@@ -96,8 +82,7 @@ fun DailyQuoteScene(
         ) {
             Card(
                 modifier = Modifier.padding(20.dp),
-                shape = RoundedCornerShape(20.dp),
-                elevation = 4.dp
+                shape = RoundedCornerShape(20.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

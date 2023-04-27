@@ -36,10 +36,9 @@ import org.bandev.buddhaquotescompose.items.ListIcon
  * @author Jack Devey
  */
 
-class ListMapper(val application: Application) {
+class ListMapper(application: Application) {
 
-    private val context: Context = application.applicationContext
-    val listIcons: MutableList<ListIcon> = mutableListOf()
+    private val listIcons: MutableList<ListIcon> = mutableListOf()
 
     init {
         listIcons.add(

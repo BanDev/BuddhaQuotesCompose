@@ -5,16 +5,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
@@ -29,27 +29,13 @@ fun AboutScene() {
 
     Column(Modifier.fillMaxSize()) {
 
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            backgroundColor = MaterialTheme.colors.background,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    modifier = Modifier
-                        .pagerTabIndicatorOffset(pagerState, tabPositions)
-                        .wrapContentSize(Alignment.BottomCenter)
-                        .width(120.dp)
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(topEnd = 13.dp, topStart = 13.dp)),
-                    color = MaterialTheme.colors.primary,
-                )
-            }
-        ) {
+        TabRow(selectedTabIndex = pagerState.currentPage) {
             pages.forEachIndexed { index, titleRes ->
                 Tab(
                     text = {
                         Text(
                             stringResource(id = titleRes),
-                            style = MaterialTheme.typography.subtitle1,
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     },
                     selected = pagerState.currentPage == index,

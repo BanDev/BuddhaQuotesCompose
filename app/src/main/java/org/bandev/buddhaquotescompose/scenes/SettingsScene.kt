@@ -13,13 +13,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Brightness6
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.LightMode
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,7 +57,7 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
 
     Column {
         SettingsMenuLink(
-            modifier = Modifier.background(MaterialTheme.colors.background),
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
             icon = { Icon(imageVector = theme.toIcon(), contentDescription = null) },
             title = { Text(text = stringResource(R.string.theme)) },
             subtitle = { Text(text = theme.toString()) },
@@ -70,7 +70,7 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
             LazyColumn(
                 Modifier
                     .background(
-                        color = MaterialTheme.colors.background,
+                        color = MaterialTheme.colorScheme.background,
                         shape = RoundedCornerShape(16.dp)
                     )
                     .fillMaxWidth()

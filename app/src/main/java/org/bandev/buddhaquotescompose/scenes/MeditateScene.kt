@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.FloatingActionButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -155,12 +155,14 @@ private fun PauseTimerFloatingButton(
     ) {
         ExtendedFloatingActionButton(
             modifier = modifier,
-            text = { Text(text = if (isTimerPaused) "RESUME" else "PAUSE") },
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = 2.dp,
                 pressedElevation = 6.dp
             ),
-            onClick = onClick
+            onClick = onClick,
+            content = {
+                Text(text = if (isTimerPaused) "RESUME" else "PAUSE")
+            }
         )
     }
 }
