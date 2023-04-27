@@ -69,7 +69,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     // AboutLibraries - https://github.com/mikepenz/AboutLibraries
-    implementation 'com.mikepenz:aboutlibraries-core:8.9.4'
+    implementation 'com.mikepenz:aboutlibraries-core:10.6.2'
 
     // Accompanist - https://github.com/google/accompanist
     def accompanist_version = "0.23.1"
