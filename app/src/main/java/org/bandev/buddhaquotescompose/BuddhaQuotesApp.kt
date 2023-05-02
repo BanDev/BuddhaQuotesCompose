@@ -2,15 +2,11 @@ package org.bandev.buddhaquotescompose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.Menu
@@ -34,19 +30,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
+import org.bandev.buddhaquotescompose.scenes.AboutScene
 import org.bandev.buddhaquotescompose.scenes.DailyQuoteScene
 import org.bandev.buddhaquotescompose.scenes.HomeScene
 import org.bandev.buddhaquotescompose.scenes.InsideListScene
 import org.bandev.buddhaquotescompose.scenes.ListsScene
 import org.bandev.buddhaquotescompose.scenes.MeditateScene
 import org.bandev.buddhaquotescompose.scenes.SettingsScene
-import org.bandev.buddhaquotescompose.scenes.about.AboutScene
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.settings.toBoolean
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
@@ -56,9 +54,10 @@ import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 @Composable
 fun BuddhaQuotesApp() {
     val settings = SettingsViewModel(LocalContext.current)
+    val darkTheme = settings.getThemeLive().toBoolean()
 
-    BuddhaQuotesComposeTheme(darkTheme = settings.getThemeLive().toBoolean()) {
-        EdgeToEdgeContent {
+    BuddhaQuotesComposeTheme(darkTheme = darkTheme) {
+        EdgeToEdgeContent(darkTheme = darkTheme) {
             var toolbarTitle by remember { mutableStateOf(R.string.app_name) }
             val navController = rememberNavController()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -70,7 +69,6 @@ fun BuddhaQuotesApp() {
 
             Column {
                 ModalNavigationDrawer(
-                    modifier = Modifier.statusBarsPadding(),
                     drawerContent = {
                         AppDrawer(
                             navigateTo = { route ->
@@ -83,8 +81,7 @@ fun BuddhaQuotesApp() {
                             closeDrawer = { scope.launch { drawerState.close() } }
                         )
                     },
-                    drawerState = drawerState,
-                    gesturesEnabled = false
+                    drawerState = drawerState
                 ) {
                     Scaffold(
                         topBar = {
@@ -116,13 +113,6 @@ fun BuddhaQuotesApp() {
                                 windowInsets = WindowInsets.statusBars
                                     .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
                             )
-                        },
-                        bottomBar = {
-                            Spacer(
-                                modifier = Modifier
-                                    .navigationBarsPadding()
-                                    .fillMaxWidth()
-                            )
                         }
                     ) { paddingValues ->
                         NavHost(
@@ -138,9 +128,12 @@ fun BuddhaQuotesApp() {
                                 toolbarTitle = R.string.your_lists
                                 ListsScene(navController = navController)
                             }
-                            composable(Scene.InsideList.route) {
+                            composable(
+                                route = "${Scene.InsideList.route}/{listId}",
+                                arguments = listOf(navArgument("listId") { type = NavType.IntType })
+                            ) { backStackEntry ->
                                 toolbarTitle = R.string.app_name
-                                InsideListScene()
+                                InsideListScene(listId = backStackEntry.arguments?.getInt("listId")!!)
                             }
                             composable(Scene.DailyQuote.route) {
                                 toolbarTitle = R.string.daily_quote
@@ -166,14 +159,14 @@ fun BuddhaQuotesApp() {
                             ) {
                                 Text(
                                     text = "Quote help",
-                                    modifier = Modifier.padding(Dp(16f)),
+                                    modifier = Modifier.padding(16.dp),
                                     color = Color.Red,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Divider()
                                 Column(
-                                    modifier = Modifier.padding(Dp(16f)),
-                                    verticalArrangement = Arrangement.spacedBy(Dp(16f))
+                                    modifier = Modifier.padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
                                 ){
                                     Text(
                                         text = "You can press the next button or swipe down from the top to get a new quote",

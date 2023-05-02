@@ -154,9 +154,7 @@ fun DrawerButton(
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp)
+                modifier = Modifier.fillMaxWidth().height(30.dp)
             ) {
                 Icon(
                     imageVector = icon,

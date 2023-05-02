@@ -210,7 +210,7 @@ abstract class Db : RoomDatabase() {
     /**
      * A list in the application.
      *
-     * Each list has its own id, so we dont need
+     * Each list has its own id, so we don't need
      * to worry about clashing names like
      * previously. They also have their own user
      * changable icon, so the id of that is also

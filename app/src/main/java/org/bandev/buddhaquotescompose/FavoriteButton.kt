@@ -21,7 +21,7 @@ import org.bandev.buddhaquotescompose.ui.theme.heart
 fun FavoriteButton(
     checked: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     IconToggleButton(
         checked = checked,

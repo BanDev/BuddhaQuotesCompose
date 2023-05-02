@@ -11,41 +11,9 @@
     <string name="quote_count">%d quote</string>
     <string name="quotes_count">%d quotes</string>
 
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
-    <string name="sunday">Sunday</string>
-
-    <string name="january">January</string>
-    <string name="february">February</string>
-    <string name="march">March</string>
-    <string name="april">April</string>
-    <string name="may">May</string>
-    <string name="june">June</string>
-    <string name="july">July</string>
-    <string name="august">August</string>
-    <string name="september">September</string>
-    <string name="october">October</string>
-    <string name="november">November</string>
-    <string name="december">December</string>
-
-    <string name="the">the</string>
-
-    <string name="st">st</string>
-    <string name="nd">nd</string>
-    <string name="rd">rd</string>
-    <string name="th">th</string>
-
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="system">Follow System</string>
-
-    <string name="license">License</string>
-    <string name="website">Website</string>
-    <string name="source">Source</string>
 
     <string name='quote_1' id='310'>A disciplined mind brings happiness</string>
     <string name='quote_2' id='311'>A good friend who points out mistakes and imperfections and rebukes evil is to be respected as if he reveals a secret of hidden treasure</string>

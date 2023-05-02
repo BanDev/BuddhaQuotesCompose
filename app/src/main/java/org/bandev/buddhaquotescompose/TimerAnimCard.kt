@@ -11,21 +11,15 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,12 +40,16 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.duration.DurationView
+import com.maxkeppeler.sheets.duration.models.DurationSelection
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.ui.theme.SpringDefaultDampingRatio
 import org.bandev.buddhaquotescompose.ui.theme.SpringDefaultStiffness
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Timer(
     modifier: Modifier,
@@ -82,14 +80,18 @@ internal fun Timer(
             Crossfade(
                 targetState = isTimerStarted,
                 animationSpec = tween(durationMillis = if (isTimerStarted) 0 else 350),
-                modifier = Modifier.animateContentHeight()
+                modifier = Modifier.animateContentHeight(),
+                label = ""
             ) { isTimerStartedCurrentValue ->
                 if (!isTimerStartedCurrentValue) {
-                    TimePicker(
-                        seconds = timerDurationInMillis / 1000,
-                        onSecondsChange = { seconds ->
-                            onTimerDurationInMillisChange(seconds * 1000)
-                        }
+                    DurationView(
+                        useCaseState = rememberUseCaseState(),
+                        selection = DurationSelection(
+                            onPositiveClick = {
+                                onTimerDurationInMillisChange((it * 1000).toInt())
+                                onTimerIsStartedChange(!isTimerStarted)
+                            }
+                        )
                     )
                 } else {
                     TimerCountdown(
@@ -101,13 +103,14 @@ internal fun Timer(
 
             Spacer(Modifier.height(24.dp))
 
-            StartCancelTimerButton(
-                isTimerStarted = isTimerStarted,
-                enabled = timerDurationInMillis > 0
-            ) {
-                onTimerIsStartedChange(!isTimerStarted)
+            if (isTimerStarted) {
+                StartCancelTimerButton(
+                    isTimerStarted = isTimerStarted,
+                    enabled = timerDurationInMillis > 0
+                ) {
+                    onTimerIsStartedChange(!isTimerStarted)
+                }
             }
-
         }
     }
 }
@@ -142,65 +145,6 @@ private fun StartCancelTimerButton(isTimerStarted: Boolean, enabled: Boolean, on
         elevation = if (isTimerStarted) null else ButtonDefaults.buttonElevation()
     ) {
         Text(text = if (!isTimerStarted) "START" else "CANCEL")
-    }
-}
-
-@Composable
-private fun TimePicker(
-    modifier: Modifier = Modifier,
-    seconds: Int,
-    onSecondsChange: (Int) -> Unit
-) {
-    Column(modifier = modifier) {
-        Counter(
-            label = "Minutes",
-            value = seconds / 60,
-            onValueChange = { m -> onSecondsChange(m.coerceAtLeast(0) * 60 + seconds % 60) }
-        )
-        Spacer(Modifier.height(16.dp))
-        Counter(
-            label = "Seconds",
-            value = seconds % 60,
-            onValueChange = { s -> onSecondsChange((seconds - seconds % 60) + s.coerceIn(0, 59)) }
-        )
-    }
-}
-
-@Composable
-private fun Counter(
-    modifier: Modifier = Modifier,
-    label: String,
-    value: Int,
-    onValueChange: (Int) -> Unit
-) {
-    Column(modifier = modifier) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = String.format("%02d", value),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.weight(1f)
-            )
-            IconButton(onClick = { onValueChange(value + 1) }) {
-                Icon(
-                    imageVector = Icons.Rounded.Add,
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "Increment $label"
-                )
-            }
-
-            IconButton(onClick = { onValueChange(value - 1) }) {
-                Icon(
-                    imageVector = Icons.Rounded.Remove,
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "Decrease $label"
-                )
-            }
-        }
     }
 }
 

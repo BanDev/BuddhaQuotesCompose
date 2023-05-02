@@ -106,6 +106,11 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    // Sheets
+    val sheetsVersion = "1.1.1"
+    implementation("com.maxkeppeler.sheets-compose-dialogs:core:$sheetsVersion")
+    implementation("com.maxkeppeler.sheets-compose-dialogs:duration:$sheetsVersion")
 }
 
 

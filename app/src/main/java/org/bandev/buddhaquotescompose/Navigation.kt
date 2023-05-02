@@ -5,7 +5,7 @@ enum class SceneName { HOME, LISTS, INSIDELIST, DAILYQUOTE, MEDITATE, SETTINGS, 
 sealed class Scene(val id: SceneName, val route: String) {
     object Home : Scene(SceneName.HOME, "home")
     object Lists : Scene(SceneName.LISTS, "lists")
-    object InsideList: Scene(SceneName.INSIDELIST, "insidelist")
+    object InsideList : Scene(SceneName.INSIDELIST, "insidelist")
     object DailyQuote : Scene(SceneName.DAILYQUOTE, "dailyquote")
     object Meditate: Scene(SceneName.MEDITATE, "meditate")
     object Settings : Scene(SceneName.SETTINGS, "settings")

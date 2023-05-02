@@ -1,4 +1,4 @@
-package org.bandev.buddhaquotescompose.scenes.about
+package org.bandev.buddhaquotescompose.scenes
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,7 +25,7 @@ import org.bandev.buddhaquotescompose.R
 fun AboutScene() {
     val pages = remember { listOf(R.string.about, R.string.libraries) }
     val pagerState = rememberPagerState()
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     Column(Modifier.fillMaxSize()) {
 
@@ -35,12 +35,12 @@ fun AboutScene() {
                     text = {
                         Text(
                             stringResource(id = titleRes),
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MaterialTheme.typography.labelLarge,
                         )
                     },
                     selected = pagerState.currentPage == index,
                     onClick = {
-                        coroutineScope.launch {
+                        scope.launch {
                             pagerState.animateScrollToPage(index)
                         }
                     }

@@ -25,7 +25,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bandev.buddhaquotescompose.items.List
+import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.Quote
 import java.util.Calendar
@@ -61,7 +61,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** Get all quotes */
-        fun getAll(after: (quote: MutableList<Quote>) -> Unit) {
+        fun getAll(after: (quote: List<Quote>) -> Unit) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(quotes.getAll())
             }
@@ -111,14 +111,14 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         private val lists: Repository.Lists = repo.Lists()
 
         /** Get one singular list */
-        fun get(id: Int, after: (list: List) -> Unit) {
+        fun get(id: Int, after: (list: ListData) -> Unit) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(lists.get(id))
             }
         }
 
         /** Get all lists */
-        fun getAll(after: (quote: MutableList<List>) -> Unit) {
+        fun getAll(after: (quote: List<ListData>) -> Unit) {
             viewModelScope.launch {
                 after(lists.getAll())
             }
@@ -132,7 +132,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** Update a list's icon */
-        fun updateIcon(id: Int, icon: ListIcon, after: (list: List) -> Unit) {
+        fun updateIcon(id: Int, icon: ListIcon, after: (list: ListData) -> Unit) {
             viewModelScope.launch(Dispatchers.IO) {
                 lists.updateIcon(id, icon)
                 after(lists.get(id))
@@ -140,7 +140,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** New empty list */
-        fun new(title: String, after: (list: List) -> Unit) {
+        fun new(title: String, after: (list: ListData) -> Unit = {}) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(lists.new(title))
             }
@@ -166,14 +166,14 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         private val listQuotes: Repository.ListQuotes = repo.ListQuotes()
 
         /** Get just one list */
-        fun getFrom(id: Int, after: (quotes: MutableList<Quote>) -> Unit) {
+        fun getFrom(id: Int, after: (quotes: List<Quote>) -> Unit) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(listQuotes.getFrom(id))
             }
         }
 
         /** If the quote exists */
-        fun exists(quote: Quote, list: List, after: (has: Boolean) -> Any) {
+        fun exists(quote: Quote, list: ListData, after: (has: Boolean) -> Any) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(listQuotes.has(quote.id, list.id))
             }

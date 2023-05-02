@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -29,12 +30,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.bandev.buddhaquotescompose.Date
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.Quote
-import org.bandev.buddhaquotescompose.ui.theme.Shapes
+import java.text.DateFormat
+import java.util.Calendar
 
 @Composable
 fun DailyQuoteScene(
@@ -51,10 +52,7 @@ fun DailyQuoteScene(
     val context = LocalContext.current
 
     Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = Shapes.medium
-        ) {
+        ElevatedCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp)) {
                 Row(Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
                     Image(
@@ -66,8 +64,7 @@ fun DailyQuoteScene(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.End
                     ) {
-                        Text(text = Date.getWeekdayWithOrdinal())
-                        Text(text = Date.getMonthAndYear())
+                        Text(text = DateFormat.getDateInstance(DateFormat.FULL).format(Calendar.getInstance().time))
                     }
                 }
                 Text(text = stringResource(quote.resource))

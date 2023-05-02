@@ -9,11 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun InsideListScene() {
+fun InsideListScene(listId: Int) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Inside the list page content.")
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = listId.toString())
     }
 }

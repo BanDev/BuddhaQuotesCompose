@@ -35,16 +35,7 @@ import org.bandev.buddhaquotescompose.items.Quote
 object QuoteMapper {
 
     /** Find a quote and nicefy it for the UI */
-    fun convert(quote: Db.Quote): Quote {
-        return Quote(quote.id, resource(quote.id), quote.like)
-    }
-
-    /** Find all quotes and nicefy it for the UI */
-    fun convertAll(quotes: MutableList<Db.Quote>): MutableList<Quote> {
-        val list = mutableListOf<Quote>()
-        for (quote in quotes) list.add(convert(quote))
-        return list
-    }
+    fun convert(quote: Db.Quote): Quote = Quote(quote.id, resource(quote.id), quote.like)
 
     /** Get a quote resource */
     private fun resource(id: Int): Int = quotes.getValue(id)

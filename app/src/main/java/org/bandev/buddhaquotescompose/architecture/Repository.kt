@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package org.bandev.buddhaquotescompose.architecture
 
 import android.app.Application
-import org.bandev.buddhaquotescompose.items.List
+import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.Quote
 
@@ -36,9 +36,7 @@ import org.bandev.buddhaquotescompose.items.Quote
 
 class Repository(application: Application) {
 
-    private val db = Db.getInstance(application.applicationContext)!!
-    private val qm = QuoteMapper
-    private val lm = ListMapper()
+    private val database = Db.getInstance(application.applicationContext)!!
 
     /**
      * Interact with the quote table of the
@@ -48,13 +46,13 @@ class Repository(application: Application) {
 
     inner class Quotes {
 
-        private var dao = db.quote()
+        private var dao = database.quote()
 
         /** Get just one quote */
-        suspend fun get(id: Int): Quote = qm.convert(dao.get(id))
+        suspend fun get(id: Int): Quote = QuoteMapper.convert(dao.get(id))
 
         /** Get every single quote */
-        suspend fun getAll(): MutableList<Quote> = qm.convertAll(dao.getAll())
+        suspend fun getAll(): List<Quote> = dao.getAll().map(QuoteMapper::convert)
 
         /** Like a quote */
         suspend fun like(id: Int): Unit = dao.like(id)
@@ -63,14 +61,13 @@ class Repository(application: Application) {
         suspend fun unlike(id: Int): Unit = dao.unlike(id)
 
         /** Get all liked quotes */
-        suspend fun getLiked(): MutableList<Quote> = qm.convertAll(dao.getLiked())
+        suspend fun getLiked(): List<Quote> = dao.getLiked().map(QuoteMapper::convert)
 
         /** Count the quotes */
         suspend fun count(): Int = dao.count()
 
         /** Count the liked quotes */
         suspend fun countLiked(): Int = dao.countLiked()
-
     }
 
     /**
@@ -82,13 +79,13 @@ class Repository(application: Application) {
 
     inner class Lists {
 
-        private var dao = db.list()
+        private var dao = database.list()
 
         /** Get just one list */
-        suspend fun get(id: Int): List = lm.convert(dao.get(id), this@Repository.ListQuotes())
+        suspend fun get(id: Int): ListData = ListMapper.convert(dao.get(id), this@Repository.ListQuotes())
 
         /** Get every single list */
-        suspend fun getAll(): MutableList<List> = lm.convertAll(dao.getAll(), this@Repository.ListQuotes())
+        suspend fun getAll(): List<ListData> = dao.getAll().map { ListMapper.convert(it, this@Repository.ListQuotes()) }
 
         /** Rename a list */
         suspend fun rename(id: Int, title: String): Unit = dao.rename(id, title)
@@ -97,9 +94,9 @@ class Repository(application: Application) {
         suspend fun updateIcon(id: Int, icon: ListIcon): Unit = dao.updateIcon(id, icon.id)
 
         /** New empty list */
-        suspend fun new(title: String): List {
+        suspend fun new(title: String): ListData {
             dao.create(title)
-            return lm.convert(dao.getLast(), this@Repository.ListQuotes())
+            return ListMapper.convert(dao.getLast(), this@Repository.ListQuotes())
         }
 
         /** Delete a list */
@@ -115,20 +112,18 @@ class Repository(application: Application) {
 
     inner class ListQuotes {
 
-        private var dao = db.listQuote()
+        private var dao = database.listQuote()
 
         /** Get just one list */
-        suspend fun getFrom(id: Int): MutableList<Quote> {
+        suspend fun getFrom(id: Int): List<Quote> {
             if (id == 0) return Quotes().getLiked()
             val quotes = mutableListOf<Quote>()
-            for (lq in dao.getFrom(id)) quotes.add(qm.convert(db.quote().get(lq.quoteId)))
+            for (lq in dao.getFrom(id)) quotes.add(QuoteMapper.convert(database.quote().get(lq.quoteId)))
             return quotes
         }
 
         /** See if a list has a quote */
-        suspend fun has(quoteId: Int, listId: Int): Boolean {
-            return dao.has(quoteId, listId) == 1
-        }
+        suspend fun has(quoteId: Int, listId: Int): Boolean = dao.has(quoteId, listId) == 1
 
         /** Add a quote to a list */
         suspend fun addTo(id: Int, quote: Quote) {
@@ -144,13 +139,13 @@ class Repository(application: Application) {
 
         /** Remove a quote from a list */
         suspend fun removeFrom(id: Int, quote: Quote) {
-            if (id == 0) return db.quote().unlike(quote.id)
+            if (id == 0) return database.quote().unlike(quote.id)
             dao.removeFrom(id, quote.id)
         }
 
         /** Count the quotes in a list */
         suspend fun count(id: Int): Int {
-            if (id == 0) return db.quote().countLiked()
+            if (id == 0) return database.quote().countLiked()
             return dao.count(id)
         }
 

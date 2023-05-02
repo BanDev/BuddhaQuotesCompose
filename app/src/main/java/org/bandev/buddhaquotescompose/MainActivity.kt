@@ -13,6 +13,7 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_BuddhaQuotesCompose)
+
         setContent {
             BuddhaQuotesApp()
         }

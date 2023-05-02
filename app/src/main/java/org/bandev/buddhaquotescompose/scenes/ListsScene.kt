@@ -1,30 +1,46 @@
 package org.bandev.buddhaquotescompose.scenes
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,18 +48,14 @@ import androidx.navigation.NavController
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.Scene
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
-import org.bandev.buddhaquotescompose.items.List
-import org.bandev.buddhaquotescompose.ui.theme.DarkerBackground
-import org.bandev.buddhaquotescompose.ui.theme.LighterBackground
+import org.bandev.buddhaquotescompose.items.ListData
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ListsScene(
     viewModel: BuddhaQuotesViewModel = viewModel(),
     navController: NavController
 ) {
-    var lists by remember { mutableStateOf(mutableListOf(List())) }
+    var lists: List<ListData> by remember { mutableStateOf(listOf()) }
     LaunchedEffect(
         key1 = Unit,
         block = {
@@ -53,37 +65,36 @@ fun ListsScene(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    viewModel.Lists().new("test") { }
-                          },
+                onClick = { viewModel.Lists().new("test") },
                 contentColor = Color.White
             ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
             }
         },
         floatingActionButtonPosition = FabPosition.Center
-    ) {
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(start = 15.dp, top = 1.dp, end = 15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            contentPadding = PaddingValues(
+                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
+                end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                bottom = paddingValues.calculateBottomPadding()
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             items(lists) { list ->
-                Card(
+                ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(top = 7.dp, bottom = 7.dp)
-                        .clickable { navController.navigate(Scene.InsideList.route) },
+                        .height(150.dp)
+                        .padding(vertical = 7.dp)
+                        .clickable { navController.navigate("${Scene.InsideList.route}/${list.id}") },
                     shape = RoundedCornerShape(11.dp),
-                    colors = CardDefaults.cardColors(containerColor = LighterBackground),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Row {
                         Box(
-                            Modifier
-                                .fillMaxHeight()
-                                .width(60.dp)
-                                .background(list.icon.colour),
+                            Modifier.fillMaxHeight().width(60.dp).background(list.icon.colour),
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
@@ -98,10 +109,7 @@ fun ListsScene(
                                 fontSize = 20.sp
                             )
                             Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight()
-                                    .background(DarkerBackground),
+                                Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
@@ -111,9 +119,7 @@ fun ListsScene(
                                     fontSize = 16.sp
                                 )
                                 Box(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight(),
+                                    Modifier.fillMaxWidth(),
                                     contentAlignment = Alignment.CenterEnd
                                 ) {
                                     IconButton(

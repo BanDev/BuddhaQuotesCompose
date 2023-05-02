@@ -31,101 +31,23 @@ import androidx.compose.material.icons.rounded.HolidayVillage
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.ui.graphics.Color
-import org.bandev.buddhaquotescompose.items.List
+import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 
-/**
- * Convert db list classes to more friendly
- * UI list classes. Also manage a list of
- * icons for each list.
- *
- * @author Jack Devey
- */
+object ListMapper {
 
-class ListMapper {
+    private val listIcons: List<ListIcon> = listOf(
+        ListIcon(0, Icons.Rounded.FavoriteBorder, Color.Red),
+        ListIcon(1, Icons.Rounded.List, Color.Red),
+        ListIcon(2, Icons.Rounded.HistoryEdu, Color.Red),
+        ListIcon(3, Icons.Rounded.History, Color.Red),
+        ListIcon(4, Icons.Rounded.HolidayVillage, Color.Red),
+        ListIcon(5, Icons.Rounded.FormatQuote, Color.Red),
+        ListIcon(6, Icons.Rounded.EuroSymbol, Color.Red),
+        ListIcon(7, Icons.Rounded.ThumbUp, Color.Red),
+        ListIcon(8, Icons.Rounded.ElectricRickshaw, Color.Red)
+    )
 
-    private val listIcons: MutableList<ListIcon> = mutableListOf()
-
-    init {
-        listIcons.add(
-            ListIcon(
-                0,
-                Icons.Rounded.FavoriteBorder,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                1,
-                Icons.Rounded.List,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                2,
-                Icons.Rounded.HistoryEdu,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                3,
-                Icons.Rounded.History,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                4,
-                Icons.Rounded.HolidayVillage,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                5,
-                Icons.Rounded.FormatQuote,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                6,
-                Icons.Rounded.EuroSymbol,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                7,
-                Icons.Rounded.ThumbUp,
-                Color.Red
-            )
-        )
-        listIcons.add(
-            ListIcon(
-                8,
-                Icons.Rounded.ElectricRickshaw,
-                Color.Red
-            )
-        )
-    }
-
-    /** Find a list and nicefy it for the UI */
-    suspend fun convert(list: Db.List1, repo: Repository.ListQuotes): List =
-        List(list.id, list.title, repo.count(list.id), list.system, associate(list.icon))
-
-    /** Find all lists and nicefy it for the UI */
-    suspend fun convertAll(
-        lists: MutableList<Db.List1>,
-        repo: Repository.ListQuotes
-    ): MutableList<List> {
-        val newList = mutableListOf<List>()
-        for (list in lists) newList.add(convert(list, repo))
-        return newList
-    }
-
-    /** Find a list's icon */
-    private fun associate(id: Int): ListIcon = listIcons[id]
+    suspend fun convert(list: Db.List1, repo: Repository.ListQuotes): ListData =
+        ListData(list.id, list.title, repo.count(list.id), list.system, listIcons[list.icon])
 }

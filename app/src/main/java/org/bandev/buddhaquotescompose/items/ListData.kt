@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package org.bandev.buddhaquotescompose.items
 
-data class List(
+data class ListData(
     var id: Int = 0,
     var title: String = "",
     var count: Int= 0,
