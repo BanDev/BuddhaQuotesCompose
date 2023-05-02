@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.items.List
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.Quote
-import java.util.*
+import java.util.Calendar
 
 /**
  * A level of abstraction between the ui

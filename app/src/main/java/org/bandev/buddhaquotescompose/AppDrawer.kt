@@ -1,6 +1,5 @@
 package org.bandev.buddhaquotescompose
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,8 +21,10 @@ import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.SelfImprovement
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.bandev.buddhaquotescompose.items.DrawerButton
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppDrawer(
     navigateTo: (route: String) -> Unit,
@@ -84,9 +86,7 @@ fun AppDrawer(
         )
     )
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)) {
+    ModalDrawerSheet {
         LazyColumn(Modifier.fillMaxWidth()) {
             items(topDrawerButtons) { drawerButton ->
                 DrawerButton(
@@ -128,7 +128,7 @@ fun AppDrawer(
 }
 
 @Composable
-private fun DrawerButton(
+fun DrawerButton(
     icon: ImageVector,
     label: String,
     isSelected: Boolean,

@@ -20,10 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package org.bandev.buddhaquotescompose.architecture
 
-import android.app.Application
-import android.content.Context
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.ElectricRickshaw
+import androidx.compose.material.icons.rounded.EuroSymbol
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.FormatQuote
+import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.HistoryEdu
+import androidx.compose.material.icons.rounded.HolidayVillage
+import androidx.compose.material.icons.rounded.List
+import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.ui.graphics.Color
 import org.bandev.buddhaquotescompose.items.List
 import org.bandev.buddhaquotescompose.items.ListIcon
@@ -36,7 +42,7 @@ import org.bandev.buddhaquotescompose.items.ListIcon
  * @author Jack Devey
  */
 
-class ListMapper(application: Application) {
+class ListMapper {
 
     private val listIcons: MutableList<ListIcon> = mutableListOf()
 

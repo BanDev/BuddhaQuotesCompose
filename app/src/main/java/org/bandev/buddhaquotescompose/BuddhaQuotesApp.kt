@@ -1,34 +1,45 @@
 package org.bandev.buddhaquotescompose
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
-import com.google.accompanist.insets.ui.Scaffold
-import com.google.accompanist.insets.ui.TopAppBar
 import org.bandev.buddhaquotescompose.scenes.DailyQuoteScene
 import org.bandev.buddhaquotescompose.scenes.HomeScene
 import org.bandev.buddhaquotescompose.scenes.InsideListScene
@@ -41,6 +52,7 @@ import org.bandev.buddhaquotescompose.settings.toBoolean
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuddhaQuotesApp() {
     val settings = SettingsViewModel(LocalContext.current)
@@ -49,48 +61,16 @@ fun BuddhaQuotesApp() {
         EdgeToEdgeContent {
             var toolbarTitle by remember { mutableStateOf(R.string.app_name) }
             val navController = rememberNavController()
-            val coroutineScope = rememberCoroutineScope()
-            val scaffoldState = rememberScaffoldState()
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+            val scope = rememberCoroutineScope()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute =
-                navBackStackEntry?.destination?.route ?: Scene.Home.route
+            val currentRoute = navBackStackEntry?.destination?.route ?: Scene.Home.route
+            var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+            val bottomSheetState = rememberModalBottomSheetState()
+
             Column {
-                TopAppBar(
-                    title = { Text(stringResource(toolbarTitle)) },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                coroutineScope.launch {
-                                    if (scaffoldState.drawerState.isClosed) {
-                                        scaffoldState.drawerState.open()
-                                    } else {
-                                        scaffoldState.drawerState.close()
-                                    }
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Menu,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    contentPadding = WindowInsets.statusBars
-                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                        .asPaddingValues(),
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.background,
-                    elevation = 0.dp
-                )
-                Scaffold(
-                    scaffoldState = scaffoldState,
-                    bottomBar = {
-                        Spacer(
-                            modifier = Modifier
-                                .navigationBarsPadding()
-                                .fillMaxWidth()
-                        )
-                    },
+                ModalNavigationDrawer(
+                    modifier = Modifier.statusBarsPadding(),
                     drawerContent = {
                         AppDrawer(
                             navigateTo = { route ->
@@ -100,45 +80,111 @@ fun BuddhaQuotesApp() {
                                 }
                             },
                             currentScreen = currentRoute,
-                            closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
+                            closeDrawer = { scope.launch { drawerState.close() } }
                         )
                     },
-                    drawerElevation = 0.dp
-                ) { paddingValues ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Scene.Home.route,
-                        modifier = Modifier.padding(paddingValues = paddingValues)
-                    ) {
-                        composable(Scene.Home.route) {
-                            toolbarTitle = R.string.app_name
-                            HomeScene()
-                        }
-                        composable(Scene.Lists.route) {
-                            toolbarTitle = R.string.your_lists
-                            ListsScene(
-                                navController = navController
+                    drawerState = drawerState,
+                    gesturesEnabled = false
+                ) {
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                title = { Text(stringResource(toolbarTitle)) },
+                                navigationIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            scope.launch { 
+                                                drawerState.apply { 
+                                                    if (isClosed) open() else close() 
+                                                } 
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Menu,
+                                            contentDescription = null
+                                        )
+                                    }
+                                },
+                                actions = {
+                                    IconButton(
+                                        onClick = { openBottomSheet = !openBottomSheet }
+                                    ) {
+                                        Icon(Icons.Rounded.HelpOutline, contentDescription = null)
+                                    }
+                                },
+                                windowInsets = WindowInsets.statusBars
+                                    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                            )
+                        },
+                        bottomBar = {
+                            Spacer(
+                                modifier = Modifier
+                                    .navigationBarsPadding()
+                                    .fillMaxWidth()
                             )
                         }
-                        composable(Scene.InsideList.route) {
-                            toolbarTitle = R.string.app_name
-                            InsideListScene()
+                    ) { paddingValues ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = Scene.Home.route,
+                            modifier = Modifier.padding(paddingValues = paddingValues)
+                        ) {
+                            composable(Scene.Home.route) {
+                                toolbarTitle = R.string.app_name
+                                HomeScene()
+                            }
+                            composable(Scene.Lists.route) {
+                                toolbarTitle = R.string.your_lists
+                                ListsScene(navController = navController)
+                            }
+                            composable(Scene.InsideList.route) {
+                                toolbarTitle = R.string.app_name
+                                InsideListScene()
+                            }
+                            composable(Scene.DailyQuote.route) {
+                                toolbarTitle = R.string.daily_quote
+                                DailyQuoteScene()
+                            }
+                            composable(Scene.Meditate.route) {
+                                toolbarTitle = R.string.meditate
+                                MeditateScene()
+                            }
+                            composable(Scene.Settings.route) {
+                                toolbarTitle = R.string.settings
+                                SettingsScene()
+                            }
+                            composable(Scene.About.route) {
+                                toolbarTitle = R.string.about
+                                AboutScene()
+                            }
                         }
-                        composable(Scene.DailyQuote.route) {
-                            toolbarTitle = R.string.daily_quote
-                            DailyQuoteScene()
-                        }
-                        composable(Scene.Meditate.route) {
-                            toolbarTitle = R.string.meditate
-                            MeditateScene()
-                        }
-                        composable(Scene.Settings.route) {
-                            toolbarTitle = R.string.settings
-                            SettingsScene()
-                        }
-                        composable(Scene.About.route) {
-                            toolbarTitle = R.string.about
-                            AboutScene()
+                        if (openBottomSheet) {
+                            ModalBottomSheet(
+                                onDismissRequest = { openBottomSheet = false },
+                                sheetState = bottomSheetState
+                            ) {
+                                Text(
+                                    text = "Quote help",
+                                    modifier = Modifier.padding(Dp(16f)),
+                                    color = Color.Red,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Divider()
+                                Column(
+                                    modifier = Modifier.padding(Dp(16f)),
+                                    verticalArrangement = Arrangement.spacedBy(Dp(16f))
+                                ){
+                                    Text(
+                                        text = "You can press the next button or swipe down from the top to get a new quote",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    Text(
+                                        text = "You can change the image at the bottom by holding down on it which will bring up a selection of 16 image options. 🤩",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
                         }
                     }
                 }

@@ -3,9 +3,8 @@ package org.bandev.buddhaquotescompose
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.TextStyle
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 object Date {
 

@@ -64,14 +64,13 @@ dependencies {
     implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.1.0-rc01")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.activity:activity-compose:1.7.1")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.animation:animation")
     implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
@@ -82,7 +81,6 @@ dependencies {
 
     // Accompanist - https://github.com/google/accompanist
     val accompanistVersion = "0.31.1-alpha"
-    implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     // Compose Settings - https://github.com/alorma/Compose-Settings

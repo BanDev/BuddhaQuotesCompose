@@ -38,7 +38,7 @@ class Repository(application: Application) {
 
     private val db = Db.getInstance(application.applicationContext)!!
     private val qm = QuoteMapper
-    private val lm = ListMapper(application)
+    private val lm = ListMapper()
 
     /**
      * Interact with the quote table of the
