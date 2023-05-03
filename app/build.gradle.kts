@@ -27,13 +27,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.current()
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
     buildFeatures {
         compose = true
     }
@@ -48,6 +41,10 @@ android {
     lint {
         abortOnError = false
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
