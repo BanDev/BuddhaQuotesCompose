@@ -8,5 +8,5 @@ val OceanBlue = Color(0xFF5173B0)
  * Miscellaneous colours
  */
 
-val heart = Color(0xFFFF6347)
+val heartTint = Color(0xFFFF6347)
 val bandev = Color(0xFF5E17EB)

@@ -44,7 +44,7 @@ fun AppDrawer(
     currentScreen: String,
     closeDrawer: () -> Unit
 ) {
-    val topDrawerButtons = arrayOf(
+    val topDrawerButtons = listOf(
         DrawerButton(
             icon = Icons.Rounded.FormatQuote,
             label = "Home",
@@ -71,7 +71,7 @@ fun AppDrawer(
         )
     )
 
-    val bottomDrawerButtons = arrayOf(
+    val bottomDrawerButtons = listOf(
         DrawerButton(
             icon = Icons.Rounded.Settings,
             label = "Settings",

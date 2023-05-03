@@ -49,7 +49,7 @@ fun SettingsScene(viewModel: SettingsViewModel = SettingsViewModel(LocalContext.
 
     val theme = viewModel.getThemeLive()
 
-    val options = arrayOf(
+    val options = listOf(
         Option(icon = Icons.Rounded.LightMode, stringRes = R.string.light, theme = Settings.Theme.LIGHT),
         Option(icon = Icons.Rounded.DarkMode, stringRes = R.string.dark, theme = Settings.Theme.DARK),
         Option(icon = Icons.Rounded.Brightness6, stringRes = R.string.system, theme = Settings.Theme.SYSTEM)

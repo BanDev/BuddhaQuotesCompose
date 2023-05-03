@@ -100,11 +100,11 @@ fun DailyQuoteScene(
                         )
                     }
                     FavoriteButton(
-                        checked = quote.liked,
+                        checked = quote.isLiked,
                         onClick = {
-                            quote.liked = !quote.liked
+                            quote.isLiked = !quote.isLiked
                             scope.launch {
-                                viewModel.Quotes().setLike(quote.id, quote.liked)
+                                viewModel.Quotes().setLike(quote.id, quote.isLiked)
                             }
                         },
                         modifier = Modifier.padding(5.dp)

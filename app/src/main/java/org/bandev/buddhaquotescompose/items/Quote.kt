@@ -20,12 +20,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package org.bandev.buddhaquotescompose.items
 
+import org.bandev.buddhaquotescompose.R
+
 /**
  * An individual Quote
  */
 
 data class Quote(
-    val id: Int,
-    val resource: Int,
-    var liked: Boolean
+    val id: Int = 0,
+    val resource: Int = R.string.blank,
+    var isLiked: Boolean = false
 )

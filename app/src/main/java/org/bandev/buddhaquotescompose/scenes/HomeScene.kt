@@ -3,9 +3,7 @@ package org.bandev.buddhaquotescompose.scenes
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -24,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -35,51 +31,43 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.architecture.QuoteMapper
+import org.bandev.buddhaquotescompose.items.AnimatedHeart
+import org.bandev.buddhaquotescompose.items.Heart
 import org.bandev.buddhaquotescompose.items.Quote
-import org.bandev.buddhaquotescompose.ui.theme.heart
+import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
-    val quote by viewModel.selectedQuote.collectAsState()
+    val quote by viewModel.selectedQuote.collectAsStateWithLifecycle(Quote())
     val context = LocalContext.current
-    var isAnimating by remember { mutableStateOf(false) }
-    val heartSize by animateDpAsState(
-        targetValue = if (isAnimating) 100.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = 500f
-        )
-    )
-    var heartPosition by remember { mutableStateOf(Offset.Zero) }
-    val pages = remember { listOf("Quotes", "Lists", "Meditation") }
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
+
+    val hearts = remember { mutableStateListOf<Heart>() }
+
     Scaffold(
         bottomBar = {
             TabRow(selectedTabIndex = pagerState.currentPage) {
-                pages.forEachIndexed { index, title ->
+                listOf("Quotes", "Lists", "Meditation").forEachIndexed { index, title ->
                     Tab(
                         text = {
                             Text(
@@ -106,25 +94,33 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
             when (page) {
                 0 -> {
                     Box(
-                        Modifier
+                        modifier = Modifier
                             .fillMaxSize()
                             .pointerInput(Unit) {
                                 detectTapGestures(
                                     onDoubleTap = { offset ->
-                                        isAnimating = true
-                                        heartPosition = offset
-                                        if (!quote.liked) {
-                                            quote.liked = !quote.liked
+                                        if (!quote.isLiked) {
                                             scope.launch {
-                                                viewModel
-                                                    .Quotes()
-                                                    .setLike(quote.id, quote.liked)
+                                                viewModel.toggleLikedOnSelectedQuote()
+                                                viewModel.Quotes().setLike(quote.id, !quote.isLiked)
                                             }
                                         }
+                                        hearts += Heart(
+                                            position = offset,
+                                            rotation = Random.nextFloat() * 40 - 20,
+                                            size = Animatable(0f),
+                                            alpha = Animatable(1f)
+                                        )
                                     }
                                 )
                             }
-                    )
+                    ) {
+                        hearts.forEachIndexed { index, heart ->
+                            AnimatedHeart(heart) {
+                                hearts.removeAt(index)
+                            }
+                        }
+                    }
                     Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
                         ElevatedCard(Modifier.fillMaxWidth()) {
                             Column(Modifier.padding(20.dp)) {
@@ -132,8 +128,8 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                     painter = painterResource(id = R.drawable.ic_left_quote),
                                     contentDescription = null
                                 )
-                                AnimatedContent(targetState = quote) {
-                                    Text(text = stringResource(it.resource))
+                                AnimatedContent(targetState = quote.resource) {
+                                    Text(text = stringResource(it))
                                 }
                                 Box(
                                     modifier = Modifier.fillMaxWidth(),
@@ -190,11 +186,11 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                         )
                                     }
                                     FavoriteButton(
-                                        checked = quote.liked,
+                                        checked = quote.isLiked,
                                         onClick = {
-                                            quote.liked = !quote.liked
                                             scope.launch {
-                                                viewModel.Quotes().setLike(quote.id, quote.liked)
+                                                viewModel.toggleLikedOnSelectedQuote()
+                                                viewModel.Quotes().setLike(quote.id, !quote.isLiked)
                                             }
                                         }
                                     )
@@ -224,26 +220,6 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                         )
                                     }
                                 }
-                            }
-                        }
-                    }
-                    Box(Modifier.fillMaxSize()) {
-                        if (isAnimating) {
-                            Icon(
-                                imageVector = Icons.Rounded.Favorite,
-                                tint = heart,
-                                modifier = Modifier
-                                    .size(heartSize)
-                                    .offset {
-                                        IntOffset(
-                                            heartPosition.x.toInt() - 100,
-                                            heartPosition.y.toInt() - 100
-                                        )
-                                    },
-                                contentDescription = null
-                            )
-                            if (heartSize == 100.dp) {
-                                isAnimating = false
                             }
                         }
                     }

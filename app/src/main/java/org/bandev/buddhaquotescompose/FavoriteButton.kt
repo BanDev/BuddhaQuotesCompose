@@ -14,14 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.bandev.buddhaquotescompose.ui.theme.heart
+import org.bandev.buddhaquotescompose.ui.theme.heartTint
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun FavoriteButton(
+    modifier: Modifier = Modifier,
     checked: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onClick: () -> Unit
 ) {
     IconToggleButton(
         checked = checked,
@@ -31,7 +31,7 @@ fun FavoriteButton(
         val transition = updateTransition(checked, label = "Checked indicator")
 
         val tint by transition.animateColor(label = "Tint") { isChecked ->
-            if (isChecked) heart else LocalContentColor.current
+            if (isChecked) heartTint else LocalContentColor.current
         }
 
         val size by transition.animateDp(

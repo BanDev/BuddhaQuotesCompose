@@ -27,9 +27,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.Quote
@@ -54,14 +54,20 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
      * and liking or unliking them.
      */
 
-    private var _selectedQuote = MutableStateFlow(Quote(0, R.string.blank, false))
+    private var _selectedQuote = MutableStateFlow(Quote())
     val selectedQuote: StateFlow<Quote> = _selectedQuote.asStateFlow()
 
-    private var _dailyQuote = MutableStateFlow(Quote(0, R.string.blank, false))
+    private var _dailyQuote = MutableStateFlow(Quote())
     val dailyQuote: StateFlow<Quote> = _dailyQuote.asStateFlow()
 
     fun setNewQuote(quote: Quote) {
         _selectedQuote.value = quote
+    }
+
+    fun toggleLikedOnSelectedQuote() {
+        _selectedQuote.update { quote ->
+            quote.copy(isLiked = !quote.isLiked)
+        }
     }
 
     private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
@@ -69,14 +75,13 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
 
     init {
         viewModelScope.launch {
-            val quotesInstance = Quotes()
-            _selectedQuote.value = quotesInstance.getRandom()
-            _dailyQuote.value = quotesInstance.getDaily()
-            _quotes.value = quotesInstance.getAll()
+            Quotes().run {
+                _selectedQuote.value = getRandom()
+                _dailyQuote.value = getDaily()
+                _quotes.value = getAll()
+            }
         }
     }
-
-    // Lists related code from previous responses...
 
     inner class Quotes {
 
@@ -93,27 +98,16 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** Get a random quote */
-        suspend fun getRandom(): Quote {
-            val size = count()
-            return get((1..size).random())
-        }
+        suspend fun getRandom(): Quote = get((1..quotes.count()).random())
 
         /** Get the quote of the day */
         suspend fun getDaily(): Quote {
-            val day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
-            val max = count()
-            val id = day % max
-            return get(id)
+            return get(Calendar.getInstance().get(Calendar.DAY_OF_YEAR) % quotes.count())
         }
 
         /** Set the like state of a quote */
         suspend fun setLike(id: Int, liked: Boolean) = withContext(Dispatchers.IO) {
             if (liked) quotes.like(id) else quotes.unlike(id)
-        }
-
-        /** Count the number of quotes */
-        private suspend fun count(): Int = withContext(Dispatchers.IO) {
-            quotes.count()
         }
     }
 
