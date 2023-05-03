@@ -60,7 +60,7 @@ android {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2023.04.01"))
+    implementation(platform("androidx.compose:compose-bom:2023.05.00"))
     implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.compose.ui:ui")
