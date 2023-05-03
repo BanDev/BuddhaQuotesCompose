@@ -1,11 +1,11 @@
 import com.google.protobuf.gradle.id
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("com.google.protobuf")
-    id("com.mikepenz.aboutlibraries.plugin")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -19,14 +19,6 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
-        vectorDrawables.useSupportLibrary = true
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
-            }
-        }
     }
 
     buildTypes {
@@ -41,7 +33,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
     buildFeatures {
         compose = true
@@ -60,64 +51,57 @@ android {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2023.05.00"))
-    implementation("androidx.browser:browser:1.5.0")
-    implementation("androidx.core:core-ktx:1.10.0")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3:1.1.0-rc01")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.runtime:runtime-livedata")
-    implementation("androidx.activity:activity-compose:1.7.1")
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.animation:animation")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation(libs.browser)
+    implementation(libs.core.ktx)
+    implementation(libs.material3)
+    implementation(libs.runtime.livedata)
+    implementation(libs.activity.compose)
+    implementation(libs.material.icons.extended)
+    implementation(libs.animation)
+    implementation(libs.navigation.compose)
+    implementation(libs.core.splashscreen)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
 
     // AboutLibraries - https://github.com/mikepenz/AboutLibraries
-    val aboutLibrariesVersion = "10.6.2"
-    implementation("com.mikepenz:aboutlibraries-core:$aboutLibrariesVersion")
-    implementation("com.mikepenz:aboutlibraries-compose:$aboutLibrariesVersion")
+    implementation(libs.aboutlibraries.core)
+    implementation(libs.aboutlibraries.compose)
 
     // Accompanist - https://github.com/google/accompanist
-    val accompanistVersion = "0.31.1-alpha"
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation(libs.accompanist.systemuicontroller)
 
     // Compose Settings - https://github.com/alorma/Compose-Settings
-    implementation("com.github.alorma:compose-settings-ui-m3:0.26.0")
+    implementation(libs.settings.ui)
 
     // Datastore
-    implementation("androidx.datastore:datastore:1.0.0")
-    implementation("com.google.protobuf:protobuf-javalite:3.22.3")
+    implementation(libs.datastore)
+    implementation(libs.protobuf.javalite)
 
     // Kotlin Coroutines - https://github.com/Kotlin/kotlinx.coroutines
-    val coroutinesVersion = "1.6.4"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation(libs.coroutines.android)
+    implementation(libs.coroutines.core)
 
     // Lifecycle - https://developer.android.com/jetpack/androidx/releases/lifecycle
-    val lifecycleVersion = "2.6.1"
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.runtime.compose)
 
     // Room - https://developer.android.com/training/data-storage/room
-    val roomVersion = "2.5.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
-    // Sheets
-    val sheetsVersion = "1.1.1"
-    implementation("com.maxkeppeler.sheets-compose-dialogs:core:$sheetsVersion")
-    implementation("com.maxkeppeler.sheets-compose-dialogs:duration:$sheetsVersion")
+    // Sheets - https://github.com/maxkeppeler/sheets-compose-dialogs
+    implementation(libs.sheets.core)
+    implementation(libs.sheets.duration)
+    implementation(libs.sheets.input)
 }
-
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.22.3"
+        artifact = libs.protobuf.protoc.get().toString()
     }
     generateProtoTasks {
         all().forEach {

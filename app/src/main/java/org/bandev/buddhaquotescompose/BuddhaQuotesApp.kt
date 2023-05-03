@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
+import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.scenes.AboutScene
 import org.bandev.buddhaquotescompose.scenes.DailyQuoteScene
 import org.bandev.buddhaquotescompose.scenes.HomeScene
@@ -58,7 +60,7 @@ fun BuddhaQuotesApp() {
 
     BuddhaQuotesComposeTheme(darkTheme = darkTheme) {
         EdgeToEdgeContent(darkTheme = darkTheme) {
-            var toolbarTitle by remember { mutableStateOf(R.string.app_name) }
+            var toolbarTitle by remember { mutableStateOf("") }
             val navController = rememberNavController()
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
@@ -86,7 +88,7 @@ fun BuddhaQuotesApp() {
                     Scaffold(
                         topBar = {
                             TopAppBar(
-                                title = { Text(stringResource(toolbarTitle)) },
+                                title = { Text(toolbarTitle) },
                                 navigationIcon = {
                                     IconButton(
                                         onClick = {
@@ -121,34 +123,42 @@ fun BuddhaQuotesApp() {
                             modifier = Modifier.padding(paddingValues = paddingValues)
                         ) {
                             composable(Scene.Home.route) {
-                                toolbarTitle = R.string.app_name
+                                toolbarTitle = stringResource(R.string.app_name)
                                 HomeScene()
                             }
                             composable(Scene.Lists.route) {
-                                toolbarTitle = R.string.your_lists
+                                toolbarTitle = stringResource(R.string.your_lists)
                                 ListsScene(navController = navController)
                             }
                             composable(
                                 route = "${Scene.InsideList.route}/{listId}",
                                 arguments = listOf(navArgument("listId") { type = NavType.IntType })
                             ) { backStackEntry ->
-                                toolbarTitle = R.string.app_name
-                                InsideListScene(listId = backStackEntry.arguments?.getInt("listId")!!)
+                                val listId = backStackEntry.arguments?.getInt("listId")!!
+                                val viewModel = viewModel<BuddhaQuotesViewModel>()
+                                LaunchedEffect(Unit) {
+                                    toolbarTitle = if (listId == 0) {
+                                        "Favourite"
+                                    } else {
+                                        viewModel.Lists().get(listId).title
+                                    }
+                                }
+                                InsideListScene(listId)
                             }
                             composable(Scene.DailyQuote.route) {
-                                toolbarTitle = R.string.daily_quote
+                                toolbarTitle = stringResource(R.string.daily_quote)
                                 DailyQuoteScene()
                             }
                             composable(Scene.Meditate.route) {
-                                toolbarTitle = R.string.meditate
+                                toolbarTitle = stringResource(R.string.meditate)
                                 MeditateScene()
                             }
                             composable(Scene.Settings.route) {
-                                toolbarTitle = R.string.settings
+                                toolbarTitle = stringResource(R.string.settings)
                                 SettingsScene()
                             }
                             composable(Scene.About.route) {
-                                toolbarTitle = R.string.about
+                                toolbarTitle =  stringResource(R.string.about)
                                 AboutScene()
                             }
                         }

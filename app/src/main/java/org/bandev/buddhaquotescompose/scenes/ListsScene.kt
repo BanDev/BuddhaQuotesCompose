@@ -1,7 +1,6 @@
 package org.bandev.buddhaquotescompose.scenes
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,15 +16,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,8 +62,7 @@ fun ListsScene(
                     scope.launch {
                         viewModel.Lists().new("test")
                     }
-                },
-                contentColor = Color.White
+                }
             ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
             }
@@ -77,17 +76,16 @@ fun ListsScene(
                 end = paddingValues.calculateRightPadding(LayoutDirection.Ltr),
                 bottom = paddingValues.calculateBottomPadding()
             ),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(items = lists, key = ListData::id) { list ->
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp)
-                        .padding(vertical = 7.dp)
+                        .height(130.dp)
                         .clickable { navController.navigate("${Scene.InsideList.route}/${list.id}") }
-                        .animateItemPlacement(),
-                    shape = RoundedCornerShape(11.dp)
+                        .animateItemPlacement()
                 ) {
                     Row {
                         Box(
@@ -97,9 +95,10 @@ fun ListsScene(
                                 .background(list.icon.colour),
                             contentAlignment = Alignment.Center
                         ) {
-                            Image(
+                            Icon(
                                 imageVector = list.icon.imageVector,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = Color.White
                             )
                         }
                         Column {
@@ -108,15 +107,16 @@ fun ListsScene(
                                 modifier = Modifier.padding(20.dp),
                                 fontSize = 20.sp
                             )
+                            Divider(Modifier.fillMaxWidth())
                             Row(
-                                Modifier.fillMaxWidth(),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
                                     text = stringResource(id = if (list.count == 1) R.string.quote_count else R.string.quotes_count, list.count),
                                     modifier = Modifier.padding(20.dp),
-                                    fontSize = 16.sp
+                                    color = Color.Gray,
+                                    style = MaterialTheme.typography.labelLarge
                                 )
                                 if (list.id != 0) {
                                     Box(

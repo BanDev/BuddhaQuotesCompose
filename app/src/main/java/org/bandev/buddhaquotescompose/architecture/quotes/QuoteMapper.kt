@@ -18,10 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
  */
 
-package org.bandev.buddhaquotescompose.architecture
+package org.bandev.buddhaquotescompose.architecture.quotes
 
 import org.bandev.buddhaquotescompose.R
-import org.bandev.buddhaquotescompose.items.Quote
+import org.bandev.buddhaquotescompose.items.QuoteItem
 
 /**
  * Find a quote based on it's database id. If
@@ -35,7 +35,7 @@ import org.bandev.buddhaquotescompose.items.Quote
 object QuoteMapper {
 
     /** Find a quote and nicefy it for the UI */
-    fun convert(quote: Db.Quote): Quote = Quote(quote.id, resource(quote.id), quote.like)
+    fun convert(quote: Quote): QuoteItem = QuoteItem(quote.id, resource(quote.id), quote.like)
 
     /** Get a quote resource */
     private fun resource(id: Int): Int = quotes.getValue(id)

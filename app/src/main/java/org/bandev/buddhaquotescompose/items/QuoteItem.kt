@@ -25,8 +25,7 @@ import org.bandev.buddhaquotescompose.R
 /**
  * An individual Quote
  */
-
-data class Quote(
+data class QuoteItem(
     val id: Int = 0,
     val resource: Int = R.string.blank,
     var isLiked: Boolean = false

@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
-import org.bandev.buddhaquotescompose.items.Quote
+import org.bandev.buddhaquotescompose.items.QuoteItem
 import java.util.Calendar
 
 /**
@@ -46,7 +46,7 @@ import java.util.Calendar
 
 class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repo: Repository = Repository(application)
+    private val repository: Repository = Repository(application)
 
     /**
      * Interact with the quote table of the
@@ -54,13 +54,13 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
      * and liking or unliking them.
      */
 
-    private var _selectedQuote = MutableStateFlow(Quote())
-    val selectedQuote: StateFlow<Quote> = _selectedQuote.asStateFlow()
+    private var _selectedQuote = MutableStateFlow(QuoteItem())
+    val selectedQuote: StateFlow<QuoteItem> = _selectedQuote.asStateFlow()
 
-    private var _dailyQuote = MutableStateFlow(Quote())
-    val dailyQuote: StateFlow<Quote> = _dailyQuote.asStateFlow()
+    private var _dailyQuote = MutableStateFlow(QuoteItem())
+    val dailyQuote: StateFlow<QuoteItem> = _dailyQuote.asStateFlow()
 
-    fun setNewQuote(quote: Quote) {
+    fun setNewQuote(quote: QuoteItem) {
         _selectedQuote.value = quote
     }
 
@@ -70,8 +70,8 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
-    val quotes: StateFlow<List<Quote>> = _quotes.asStateFlow()
+    private val _quotes = MutableStateFlow<List<QuoteItem>>(emptyList())
+    val quotes: StateFlow<List<QuoteItem>> = _quotes.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -85,23 +85,23 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
 
     inner class Quotes {
 
-        private val quotes: Repository.Quotes = repo.Quotes()
+        private val quotes: Repository.Quotes = repository.Quotes()
 
         /** Get one singular quote */
-        suspend fun get(id: Int): Quote = withContext(Dispatchers.IO) {
+        suspend fun get(id: Int): QuoteItem = withContext(Dispatchers.IO) {
             quotes.get(id)
         }
 
         /** Get all quotes */
-        suspend fun getAll(): List<Quote> = withContext(Dispatchers.IO) {
+        suspend fun getAll(): List<QuoteItem> = withContext(Dispatchers.IO) {
             quotes.getAll()
         }
 
         /** Get a random quote */
-        suspend fun getRandom(): Quote = get((1..quotes.count()).random())
+        suspend fun getRandom(): QuoteItem = get((1..quotes.count()).random())
 
         /** Get the quote of the day */
-        suspend fun getDaily(): Quote {
+        suspend fun getDaily(): QuoteItem {
             return get(Calendar.getInstance().get(Calendar.DAY_OF_YEAR) % quotes.count())
         }
 
@@ -129,7 +129,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
 
 
     inner class Lists {
-        private val _lists: Repository.Lists = repo.Lists()
+        private val _lists: Repository.Lists = repository.Lists()
 
         /** Get one singular list */
         suspend fun get(id: Int): ListData = withContext(Dispatchers.IO) {
@@ -175,24 +175,24 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
 
     inner class ListQuotes {
 
-        private val listQuotes: Repository.ListQuotes = repo.ListQuotes()
+        private val listQuotes: Repository.ListQuotes = repository.ListQuotes()
 
         /** Get just one list */
-        fun getFrom(id: Int, after: (quotes: List<Quote>) -> Unit) {
+        fun getFrom(id: Int, after: (quotes: List<QuoteItem>) -> Unit) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(listQuotes.getFrom(id))
             }
         }
 
         /** If the quote exists */
-        fun exists(quote: Quote, list: ListData, after: (has: Boolean) -> Any) {
+        fun exists(quote: QuoteItem, list: ListData, after: (has: Boolean) -> Any) {
             viewModelScope.launch(Dispatchers.IO) {
                 after(listQuotes.has(quote.id, list.id))
             }
         }
 
         /** Add a quote to a list */
-        fun addTo(id: Int, quote: Quote) {
+        fun addTo(id: Int, quote: QuoteItem) {
             viewModelScope.launch(Dispatchers.IO) {
                 listQuotes.addTo(id, quote)
             }
@@ -206,7 +206,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** Remove a quote from a list */
-        fun removeFrom(id: Int, quote: Quote) {
+        fun removeFrom(id: Int, quote: QuoteItem) {
             viewModelScope.launch(Dispatchers.IO) {
                 listQuotes.removeFrom(id, quote)
             }

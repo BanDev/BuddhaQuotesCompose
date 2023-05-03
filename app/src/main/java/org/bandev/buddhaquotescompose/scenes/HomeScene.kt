@@ -44,20 +44,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlin.random.Random
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
-import org.bandev.buddhaquotescompose.architecture.QuoteMapper
+import org.bandev.buddhaquotescompose.architecture.quotes.QuoteMapper
 import org.bandev.buddhaquotescompose.items.AnimatedHeart
 import org.bandev.buddhaquotescompose.items.Heart
-import org.bandev.buddhaquotescompose.items.Quote
-import kotlin.random.Random
+import org.bandev.buddhaquotescompose.items.QuoteItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
-    val quote by viewModel.selectedQuote.collectAsStateWithLifecycle(Quote())
+    val quote by viewModel.selectedQuote.collectAsStateWithLifecycle(QuoteItem())
     val context = LocalContext.current
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
@@ -233,7 +233,7 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
     }
 }
 
-fun Context.shareQuote(quote: Quote) {
+fun Context.shareQuote(quote: QuoteItem) {
     Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(
