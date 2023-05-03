@@ -85,6 +85,9 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
 
+    // Lottie Compose - https://github.com/airbnb/lottie
+    implementation(libs.lottie.compose)
+
     // Room - https://developer.android.com/training/data-storage/room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -94,6 +97,7 @@ dependencies {
     implementation(libs.sheets.core)
     implementation(libs.sheets.duration)
     implementation(libs.sheets.input)
+    implementation(libs.sheets.info)
 }
 
 protobuf {

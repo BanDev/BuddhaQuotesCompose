@@ -87,8 +87,8 @@ internal fun Timer(
                     DurationView(
                         useCaseState = rememberUseCaseState(),
                         selection = DurationSelection(
-                            onPositiveClick = {
-                                onTimerDurationInMillisChange((it * 1000).toInt())
+                            onPositiveClick = { milliseconds ->
+                                onTimerDurationInMillisChange((milliseconds * 1000).toInt())
                                 onTimerIsStartedChange(!isTimerStarted)
                             }
                         )

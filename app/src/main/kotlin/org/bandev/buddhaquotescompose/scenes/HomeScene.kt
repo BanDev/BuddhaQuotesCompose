@@ -151,7 +151,7 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                             Image(
                                 painter = painterResource(id = R.drawable.image_anahata),
                                 contentDescription = null,
-                                modifier = Modifier.size(200.dp)
+                                modifier = Modifier.size(250.dp)
                             )
                             ElevatedCard(Modifier.padding(20.dp)) {
                                 Row(

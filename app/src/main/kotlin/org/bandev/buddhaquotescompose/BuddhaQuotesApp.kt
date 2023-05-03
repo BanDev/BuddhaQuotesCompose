@@ -1,9 +1,9 @@
 package org.bandev.buddhaquotescompose
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -26,7 +26,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +37,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.maxkeppeker.sheets.core.models.base.Header
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeker.sheets.core.utils.BaseConstants
+import com.maxkeppeler.sheets.info.InfoView
+import com.maxkeppeler.sheets.info.models.InfoBody
+import com.maxkeppeler.sheets.info.models.InfoSelection
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.scenes.AboutScene
@@ -68,6 +76,7 @@ fun BuddhaQuotesApp() {
             val currentRoute = navBackStackEntry?.destination?.route ?: Scene.Home.route
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
             val bottomSheetState = rememberModalBottomSheetState()
+            val flowerAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.flower))
 
             Column {
                 ModalNavigationDrawer(
@@ -167,26 +176,41 @@ fun BuddhaQuotesApp() {
                                 onDismissRequest = { openBottomSheet = false },
                                 sheetState = bottomSheetState
                             ) {
-                                Text(
-                                    text = "Quote help",
-                                    modifier = Modifier.padding(16.dp),
-                                    color = Color.Red,
-                                    fontWeight = FontWeight.Bold
+                                InfoView(
+                                    useCaseState = rememberUseCaseState(),
+                                    selection = InfoSelection(
+                                        negativeButton = null,
+                                        positiveButton = BaseConstants.DEFAULT_POSITIVE_BUTTON,
+                                        onPositiveClick = {
+                                            scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
+                                                if (!bottomSheetState.isVisible) {
+                                                    openBottomSheet = false
+                                                }
+                                            }
+                                        }
+                                    ),
+                                    header = Header.Custom {
+                                        LottieAnimation(
+                                            composition = flowerAnimation,
+                                            modifier = Modifier.height(150.dp)
+                                        )
+                                        Text(
+                                            text = "Quote help",
+                                            modifier = Modifier.padding(16.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.SemiBold,
+                                            style = MaterialTheme.typography.titleLarge,
+                                        )
+                                        Divider()
+                                    },
+                                    body = InfoBody.Default(
+                                        bodyText = """
+                                            You can press the next button or swipe down from the top to get a new quote
+                                            
+                                            You can also change the image at the bottom by holding down on it which will bring up a selection of 16 image options 🤩
+                                        """.trimIndent()
+                                    ),
                                 )
-                                Divider()
-                                Column(
-                                    modifier = Modifier.padding(16.dp),
-                                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                                ){
-                                    Text(
-                                        text = "You can press the next button or swipe down from the top to get a new quote",
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                    Text(
-                                        text = "You can change the image at the bottom by holding down on it which will bring up a selection of 16 image options. 🤩",
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                }
                             }
                         }
                     }
