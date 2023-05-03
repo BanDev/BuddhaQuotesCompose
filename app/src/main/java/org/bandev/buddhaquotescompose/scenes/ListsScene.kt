@@ -1,5 +1,6 @@
 package org.bandev.buddhaquotescompose.scenes
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,8 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -31,11 +29,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,27 +41,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.Scene
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.ListData
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListsScene(
     viewModel: BuddhaQuotesViewModel = viewModel(),
     navController: NavController
 ) {
-    var lists: List<ListData> by remember { mutableStateOf(listOf()) }
-    LaunchedEffect(
-        key1 = Unit,
-        block = {
-            viewModel.Lists().getAll { lists = it }
-        }
-    )
+    val lists by viewModel.lists.collectAsState()
+    val scope = rememberCoroutineScope()
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.Lists().new("test") },
+                onClick = {
+                    scope.launch {
+                        viewModel.Lists().new("test")
+                    }
+                },
                 contentColor = Color.White
             ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
@@ -74,27 +71,30 @@ fun ListsScene(
         floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(10.dp),
             contentPadding = PaddingValues(
-                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr),
-                end = paddingValues.calculateEndPadding(LayoutDirection.Ltr),
+                start = paddingValues.calculateLeftPadding(LayoutDirection.Ltr),
+                end = paddingValues.calculateRightPadding(LayoutDirection.Ltr),
                 bottom = paddingValues.calculateBottomPadding()
             ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(lists) { list ->
+            items(items = lists, key = ListData::id) { list ->
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp)
                         .padding(vertical = 7.dp)
-                        .clickable { navController.navigate("${Scene.InsideList.route}/${list.id}") },
-                    shape = RoundedCornerShape(11.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        .clickable { navController.navigate("${Scene.InsideList.route}/${list.id}") }
+                        .animateItemPlacement(),
+                    shape = RoundedCornerShape(11.dp)
                 ) {
                     Row {
                         Box(
-                            Modifier.fillMaxHeight().width(60.dp).background(list.icon.colour),
+                            Modifier
+                                .fillMaxHeight()
+                                .width(60.dp)
+                                .background(list.icon.colour),
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
@@ -118,18 +118,24 @@ fun ListsScene(
                                     modifier = Modifier.padding(20.dp),
                                     fontSize = 16.sp
                                 )
-                                Box(
-                                    Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.CenterEnd
-                                ) {
-                                    IconButton(
-                                        onClick = {},
-                                        modifier = Modifier.padding(10.dp)
+                                if (list.id != 0) {
+                                    Box(
+                                        Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.CenterEnd
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.MoreVert,
-                                            contentDescription = null
-                                        )
+                                        IconButton(
+                                            onClick = {
+                                                scope.launch {
+                                                    viewModel.Lists().delete(list.id)
+                                                }
+                                            },
+                                            modifier = Modifier.padding(10.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Rounded.MoreVert,
+                                                contentDescription = null
+                                            )
+                                        }
                                     }
                                 }
                             }

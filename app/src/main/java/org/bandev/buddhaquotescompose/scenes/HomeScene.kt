@@ -35,7 +35,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,12 +62,7 @@ import org.bandev.buddhaquotescompose.ui.theme.heart
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
-    var quote by remember { mutableStateOf(Quote(1, R.string.blank, false)) }
-    LaunchedEffect(
-        key1 = Unit,
-        block = { viewModel.Quotes().getRandom { quote = it } }
-    )
-    var isLiked by remember { mutableStateOf(quote.liked) }
+    val quote by viewModel.selectedQuote.collectAsState()
     val context = LocalContext.current
     var isAnimating by remember { mutableStateOf(false) }
     val heartSize by animateDpAsState(
@@ -118,9 +113,13 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                     onDoubleTap = { offset ->
                                         isAnimating = true
                                         heartPosition = offset
-                                        if (!isLiked) {
-                                            isLiked = !isLiked
-                                            viewModel.Quotes().setLike(quote.id, isLiked)
+                                        if (!quote.liked) {
+                                            quote.liked = !quote.liked
+                                            scope.launch {
+                                                viewModel
+                                                    .Quotes()
+                                                    .setLike(quote.id, quote.liked)
+                                            }
                                         }
                                     }
                                 )
@@ -172,9 +171,8 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                             } else {
                                                 quote.id - 1
                                             }
-                                            viewModel.Quotes().get(id) {
-                                                quote = it
-                                                isLiked = quote.liked
+                                            scope.launch {
+                                                viewModel.setNewQuote(viewModel.Quotes().get(id))
                                             }
                                         }
                                     ) {
@@ -192,10 +190,12 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                         )
                                     }
                                     FavoriteButton(
-                                        checked = isLiked,
+                                        checked = quote.liked,
                                         onClick = {
-                                            isLiked = !isLiked
-                                            viewModel.Quotes().setLike(quote.id, isLiked)
+                                            quote.liked = !quote.liked
+                                            scope.launch {
+                                                viewModel.Quotes().setLike(quote.id, quote.liked)
+                                            }
                                         }
                                     )
                                     IconButton(onClick = {}) {
@@ -213,9 +213,8 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                             } else {
                                                 quote.id + 1
                                             }
-                                            viewModel.Quotes().get(id) {
-                                                quote = it
-                                                isLiked = quote.liked
+                                            scope.launch {
+                                                viewModel.setNewQuote(viewModel.Quotes().get(id))
                                             }
                                         }
                                     ) {
@@ -235,7 +234,12 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                 tint = heart,
                                 modifier = Modifier
                                     .size(heartSize)
-                                    .offset { IntOffset(heartPosition.x.toInt() - 100, heartPosition.y.toInt() - 100) },
+                                    .offset {
+                                        IntOffset(
+                                            heartPosition.x.toInt() - 100,
+                                            heartPosition.y.toInt() - 100
+                                        )
+                                    },
                                 contentDescription = null
                             )
                             if (heartSize == 100.dp) {

@@ -12,17 +12,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,10 +27,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
-import org.bandev.buddhaquotescompose.items.Quote
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -41,20 +38,17 @@ import java.util.Calendar
 fun DailyQuoteScene(
     viewModel: BuddhaQuotesViewModel = viewModel(),
 ) {
-    var quote by remember { mutableStateOf(Quote(1, R.string.blank, false)) }
-
-    LaunchedEffect(
-        key1 = Unit,
-        block = { viewModel.Quotes().getDaily { quote = it } }
-    )
-
-    var isLiked by remember { mutableStateOf(quote.liked) }
+    val quote by viewModel.dailyQuote.collectAsState()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Column(Modifier.padding(start = 15.dp, top = 1.dp, end = 15.dp)) {
         ElevatedCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp)) {
-                Row(Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp)) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_left_quote),
                         contentDescription = null,
@@ -86,7 +80,7 @@ fun DailyQuoteScene(
             Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Card(
+            ElevatedCard(
                 modifier = Modifier.padding(20.dp),
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -106,10 +100,12 @@ fun DailyQuoteScene(
                         )
                     }
                     FavoriteButton(
-                        checked = isLiked,
+                        checked = quote.liked,
                         onClick = {
-                            isLiked = !isLiked
-                            viewModel.Quotes().setLike(quote.id, isLiked)
+                            quote.liked = !quote.liked
+                            scope.launch {
+                                viewModel.Quotes().setLike(quote.id, quote.liked)
+                            }
                         },
                         modifier = Modifier.padding(5.dp)
                     )

@@ -24,7 +24,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.Quote
@@ -49,54 +54,67 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
      * and liking or unliking them.
      */
 
+    private var _selectedQuote = MutableStateFlow(Quote(0, R.string.blank, false))
+    val selectedQuote: StateFlow<Quote> = _selectedQuote.asStateFlow()
+
+    private var _dailyQuote = MutableStateFlow(Quote(0, R.string.blank, false))
+    val dailyQuote: StateFlow<Quote> = _dailyQuote.asStateFlow()
+
+    fun setNewQuote(quote: Quote) {
+        _selectedQuote.value = quote
+    }
+
+    private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
+    val quotes: StateFlow<List<Quote>> = _quotes.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val quotesInstance = Quotes()
+            _selectedQuote.value = quotesInstance.getRandom()
+            _dailyQuote.value = quotesInstance.getDaily()
+            _quotes.value = quotesInstance.getAll()
+        }
+    }
+
+    // Lists related code from previous responses...
+
     inner class Quotes {
 
         private val quotes: Repository.Quotes = repo.Quotes()
 
         /** Get one singular quote */
-        fun get(id: Int, after: (quote: Quote) -> Unit) {
-            viewModelScope.launch {
-                after(quotes.get(id))
-            }
+        suspend fun get(id: Int): Quote = withContext(Dispatchers.IO) {
+            quotes.get(id)
         }
 
         /** Get all quotes */
-        fun getAll(after: (quote: List<Quote>) -> Unit) {
-            viewModelScope.launch(Dispatchers.IO) {
-                after(quotes.getAll())
-            }
+        suspend fun getAll(): List<Quote> = withContext(Dispatchers.IO) {
+            quotes.getAll()
         }
 
         /** Get a random quote */
-        fun getRandom(after: (quote: Quote) -> Unit) {
-            count { size ->
-                get((1..size).random(), after)
-            }
+        suspend fun getRandom(): Quote {
+            val size = count()
+            return get((1..size).random())
         }
 
         /** Get the quote of the day */
-        fun getDaily(after: (Quote) -> Unit) {
+        suspend fun getDaily(): Quote {
             val day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
-            count { max ->
-                val id = day % max
-                get(id, after)
-            }
+            val max = count()
+            val id = day % max
+            return get(id)
         }
 
         /** Set the like state of a quote */
-        fun setLike(id: Int, liked: Boolean) {
-            viewModelScope.launch(Dispatchers.IO) {
-                if (liked) quotes.like(id) else quotes.unlike(id)
-            }
+        suspend fun setLike(id: Int, liked: Boolean) = withContext(Dispatchers.IO) {
+            if (liked) quotes.like(id) else quotes.unlike(id)
         }
 
         /** Count the number of quotes */
-        private fun count(after: (size: Int) -> Unit) {
-            viewModelScope.launch(Dispatchers.IO) {
-                after(quotes.count())
-            }
+        private suspend fun count(): Int = withContext(Dispatchers.IO) {
+            quotes.count()
         }
-
     }
 
     /**
@@ -106,50 +124,50 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
      * some UI elements like title and icon.
      */
 
-    inner class Lists {
+    private val _lists = MutableStateFlow<List<ListData>>(emptyList())
+    val lists: StateFlow<List<ListData>> = _lists.asStateFlow()
 
-        private val lists: Repository.Lists = repo.Lists()
+    init {
+        viewModelScope.launch {
+            _lists.value = Lists().getAll().toMutableList()
+        }
+    }
+
+
+    inner class Lists {
+        private val _lists: Repository.Lists = repo.Lists()
 
         /** Get one singular list */
-        fun get(id: Int, after: (list: ListData) -> Unit) {
-            viewModelScope.launch(Dispatchers.IO) {
-                after(lists.get(id))
-            }
+        suspend fun get(id: Int): ListData = withContext(Dispatchers.IO) {
+            _lists.get(id)
         }
 
         /** Get all lists */
-        fun getAll(after: (quote: List<ListData>) -> Unit) {
-            viewModelScope.launch {
-                after(lists.getAll())
-            }
+        suspend fun getAll(): List<ListData> = withContext(Dispatchers.IO) {
+            _lists.getAll()
         }
 
         /** Rename a list */
-        fun rename(id: Int, title: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                lists.rename(id, title)
-            }
+        suspend fun rename(id: Int, title: String) = withContext(Dispatchers.IO) {
+            _lists.rename(id, title)
         }
 
         /** Update a list's icon */
-        fun updateIcon(id: Int, icon: ListIcon, after: (list: ListData) -> Unit) {
-            viewModelScope.launch(Dispatchers.IO) {
-                lists.updateIcon(id, icon)
-                after(lists.get(id))
-            }
+        suspend fun updateIcon(id: Int, icon: ListIcon): ListData = withContext(Dispatchers.IO) {
+            _lists.updateIcon(id, icon)
+            _lists.get(id)
         }
 
         /** New empty list */
-        fun new(title: String, after: (list: ListData) -> Unit = {}) {
-            viewModelScope.launch(Dispatchers.IO) {
-                after(lists.new(title))
-            }
+        suspend fun new(title: String): ListData = withContext(Dispatchers.IO) {
+            _lists.new(title).also { this@BuddhaQuotesViewModel._lists.value = this@BuddhaQuotesViewModel._lists.value.plus(ListData(lists.value.size, title)) }
         }
 
         /** Delete a list */
-        fun delete(id: Int) {
-            viewModelScope.launch(Dispatchers.IO) {
-                if (id != 0) lists.delete(id)
+        suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+            if (id != 0) {
+                _lists.delete(id)
+                this@BuddhaQuotesViewModel._lists.value = this@BuddhaQuotesViewModel._lists.value.filterNot { it.id == id }
             }
         }
 

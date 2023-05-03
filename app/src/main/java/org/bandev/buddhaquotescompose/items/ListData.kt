@@ -23,7 +23,7 @@ package org.bandev.buddhaquotescompose.items
 data class ListData(
     var id: Int = 0,
     var title: String = "",
-    var count: Int= 0,
+    var count: Int = 0,
     val system: Boolean = false,
     val icon: ListIcon = ListIcon()
 )
