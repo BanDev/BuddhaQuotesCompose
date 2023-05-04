@@ -18,7 +18,7 @@ import androidx.room.Query
 
         /** Get every single quote */
         @Query("SELECT * FROM quote")
-        suspend fun getAll(): MutableList<Quote>
+        suspend fun getAll(): List<Quote>
 
         /** Like a quote */
         @Query("UPDATE quote SET `like` = 1 WHERE id = :id")
@@ -30,7 +30,7 @@ import androidx.room.Query
 
         /** Get all liked quotes */
         @Query("SELECT * FROM quote WHERE `like` = 1")
-        suspend fun getLiked(): MutableList<Quote>
+        suspend fun getLiked(): List<Quote>
 
         /** Count the quotes */
         @Query("SELECT COUNT(id) FROM quote")

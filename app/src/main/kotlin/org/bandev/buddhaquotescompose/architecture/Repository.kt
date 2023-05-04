@@ -1,27 +1,7 @@
-/**
-
-Buddha Quotes
-Copyright (C) 2021  BanDev
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
- */
-
 package org.bandev.buddhaquotescompose.architecture
 
 import android.app.Application
-import org.bandev.buddhaquotescompose.architecture.quotes.QuoteMapper
+import org.bandev.buddhaquotescompose.architecture.quotes.Quote
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.QuoteItem
@@ -50,10 +30,10 @@ class Repository(application: Application) {
         private var dao = database.quote()
 
         /** Get just one quote */
-        suspend fun get(id: Int): QuoteItem = QuoteMapper.convert(dao.get(id))
+        suspend fun get(id: Int): QuoteItem = dao.get(id).toUIQuote()
 
         /** Get every single quote */
-        suspend fun getAll(): List<QuoteItem> = dao.getAll().map(QuoteMapper::convert)
+        suspend fun getAll(): List<QuoteItem> = dao.getAll().map(Quote::toUIQuote)
 
         /** Like a quote */
         suspend fun like(id: Int): Unit = dao.like(id)
@@ -62,7 +42,7 @@ class Repository(application: Application) {
         suspend fun unlike(id: Int): Unit = dao.unlike(id)
 
         /** Get all liked quotes */
-        suspend fun getLiked(): List<QuoteItem> = dao.getLiked().map(QuoteMapper::convert)
+        suspend fun getLiked(): List<QuoteItem> = dao.getLiked().map(Quote::toUIQuote)
 
         /** Count the quotes */
         suspend fun count(): Int = dao.count()
@@ -117,10 +97,13 @@ class Repository(application: Application) {
 
         /** Get just one list */
         suspend fun getFrom(id: Int): List<QuoteItem> {
-            if (id == 0) return Quotes().getLiked()
-            val quotes = mutableListOf<QuoteItem>()
-            for (lq in dao.getFrom(id)) quotes.add(QuoteMapper.convert(database.quote().get(lq.quoteId)))
-            return quotes
+            return if (id == 1) {
+                Quotes().getLiked()
+            } else {
+                dao.getFrom(id).map { listQuote ->
+                    database.quote().get(listQuote.quoteId).toUIQuote()
+                }
+            }
         }
 
         /** See if a list has a quote */
@@ -128,27 +111,25 @@ class Repository(application: Application) {
 
         /** Add a quote to a list */
         suspend fun addTo(id: Int, quote: QuoteItem) {
-            if (id == 0) return Quotes().like(quote.id)
+            if (id == 1) return Quotes().like(quote.id)
             dao.addTo(id, quote.id, count(id).toDouble())
         }
 
         /** Add a quote to a list from just quote id */
         suspend fun addTo(listId: Int, quoteId: Int) {
-            if (listId == 0) return Quotes().like(quoteId)
+            if (listId == 1) return Quotes().like(quoteId)
             dao.addTo(listId, quoteId, count(listId).toDouble())
         }
 
         /** Remove a quote from a list */
         suspend fun removeFrom(id: Int, quote: QuoteItem) {
-            if (id == 0) return database.quote().unlike(quote.id)
+            if (id == 1) return database.quote().unlike(quote.id)
             dao.removeFrom(id, quote.id)
         }
 
         /** Count the quotes in a list */
         suspend fun count(id: Int): Int {
-            if (id == 0) return database.quote().countLiked()
-            return dao.count(id)
+            return if (id == 1) database.quote().countLiked() else dao.count(id)
         }
-
     }
 }

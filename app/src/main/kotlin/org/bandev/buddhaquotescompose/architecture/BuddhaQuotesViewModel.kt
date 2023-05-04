@@ -1,23 +1,3 @@
-/**
-
-Buddha Quotes
-Copyright (C) 2021  BanDev
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
- */
-
 package org.bandev.buddhaquotescompose.architecture
 
 import android.app.Application
@@ -31,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.bandev.buddhaquotescompose.architecture.quotes.QuoteStore
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.QuoteItem
@@ -99,7 +80,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** Get a random quote */
-        suspend fun getRandom(): QuoteItem = get((1..quotes.count()).random())
+        suspend fun getRandom(): QuoteItem = get((0 until QuoteStore.quotes.size).random())
 
         /** Get the quote of the day */
         suspend fun getDaily(): QuoteItem {
@@ -157,21 +138,17 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         /** New empty list */
         suspend fun new(title: String): ListData = withContext(Dispatchers.IO) {
             _lists.new(title).also {
-                this@BuddhaQuotesViewModel._lists += ListData(
-                    id = generateSequence(1) { it + 1 }.first { it !in lists.map(ListData::id) },
-                    title = title
-                )
+                this@BuddhaQuotesViewModel._lists += ListData(id = it.id, title = it.title)
             }
         }
 
         /** Delete a list */
         suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-            if (id != 0) {
+            if (id != 1) {
                 _lists.delete(id)
                 this@BuddhaQuotesViewModel._lists.removeAll { it.id == id }
             }
         }
-
     }
 
     /**

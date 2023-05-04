@@ -11,18 +11,18 @@ import androidx.room.Query
      */
 
     @Dao
-    interface ListDao {
+    interface ListOfQuotesDao {
         /** Get just one list */
         @Query("SELECT * FROM list WHERE id = :id")
-        suspend fun get(id: Int): List1
+        suspend fun get(id: Int): ListOfQuotes
 
         /** Get every single list */
         @Query("SELECT * FROM list")
-        suspend fun getAll(): MutableList<List1>
+        suspend fun getAll(): List<ListOfQuotes>
 
         /** Get the latest list in the db */
         @Query("SELECT * FROM list ORDER BY ID DESC LIMIT 1")
-        suspend fun getLast(): List1
+        suspend fun getLast(): ListOfQuotes
 
         /** Rename a list */
         @Query("UPDATE list SET `title` = :name WHERE id = :id")

@@ -1,35 +1,17 @@
-/**
-
-Buddha Quotes
-Copyright (C) 2021  BanDev
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
- */
-
 package org.bandev.buddhaquotescompose.architecture
 
 import android.content.Context
 import androidx.room.*
-import org.bandev.buddhaquotescompose.architecture.lists.List1
-import org.bandev.buddhaquotescompose.architecture.lists.ListDao
+import androidx.sqlite.db.SupportSQLiteDatabase
+import org.bandev.buddhaquotescompose.architecture.lists.ListOfQuotes
+import org.bandev.buddhaquotescompose.architecture.lists.ListOfQuotesDao
 import org.bandev.buddhaquotescompose.architecture.quotes.Quote
 import org.bandev.buddhaquotescompose.architecture.quotes.QuoteDao
+import org.bandev.buddhaquotescompose.architecture.quotes.QuoteStore
 
 @Database(
     version = 1,
-    entities = [Quote::class, List1::class, BuddhaQuotesDatabase.ListQuote::class],
+    entities = [Quote::class, ListOfQuotes::class, BuddhaQuotesDatabase.ListQuote::class],
     exportSchema = false
 )
 abstract class BuddhaQuotesDatabase : RoomDatabase() {
@@ -37,8 +19,8 @@ abstract class BuddhaQuotesDatabase : RoomDatabase() {
     /** Provide access to the [QuoteDao] */
     abstract fun quote(): QuoteDao
 
-    /** Provide access to the [ListDao] */
-    abstract fun list(): ListDao
+    /** Provide access to the [ListOfQuotesDao] */
+    abstract fun list(): ListOfQuotesDao
 
     /** Provide access to the [ListQuoteDao] */
     abstract fun listQuote(): ListQuoteDao
@@ -49,7 +31,17 @@ abstract class BuddhaQuotesDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): BuddhaQuotesDatabase = Instance ?: synchronized(this) {
             Room.databaseBuilder(context.applicationContext, BuddhaQuotesDatabase::class.java, "db")
-                .createFromAsset("db.db")
+                .addCallback(
+                    object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            repeat(QuoteStore.quotes.size) {
+                                db.execSQL("INSERT INTO quote DEFAULT VALUES")
+                            }
+                            db.execSQL("INSERT INTO list (title) VALUES ('Favourites')")
+                        }
+                    }
+                )
                 .fallbackToDestructiveMigration()
                 .build()
                 .also { Instance = it }
@@ -66,25 +58,24 @@ abstract class BuddhaQuotesDatabase : RoomDatabase() {
     interface ListQuoteDao {
 
         /** Get every single quote from a list */
-        @Query("SELECT * FROM list_quote WHERE list_id = :listId ORDER BY `order` ASC")
+        @Query("SELECT * FROM list_quote WHERE id = :listId ORDER BY `order` ASC")
         suspend fun getFrom(listId: Int): MutableList<ListQuote>
 
         /** Count the quotes in a list */
-        @Query("SELECT COUNT(id) FROM list_quote WHERE `list_id` = :listId AND `quote_id` = :quoteId")
+        @Query("SELECT COUNT(id) FROM list_quote WHERE `id` = :listId AND `quote_id` = :quoteId")
         suspend fun has(quoteId: Int, listId: Int): Int
 
         /** Add a quote to a list */
-        @Query("INSERT INTO list_quote (`list_id`, `quote_id`, `order`) VALUES (:listId, :quoteId, :order)")
+        @Query("INSERT INTO list_quote (`id`, `quote_id`, `order`) VALUES (:listId, :quoteId, :order)")
         suspend fun addTo(listId: Int, quoteId: Int, order: Double)
 
         /** Remove a quote from a list */
-        @Query("DELETE FROM list_quote WHERE `list_id` = :listId AND `quote_id` = :quoteId")
+        @Query("DELETE FROM list_quote WHERE `id` = :listId AND `quote_id` = :quoteId")
         suspend fun removeFrom(listId: Int, quoteId: Int)
 
-        /** Count the qoutes in a list */
-        @Query("SELECT COUNT(id) FROM list_quote WHERE `list_id` = :listId")
+        /** Count the quotes in a list */
+        @Query("SELECT COUNT(id) FROM list_quote WHERE `id` = :listId")
         suspend fun count(listId: Int): Int
-
     }
 
     /**
@@ -103,10 +94,8 @@ abstract class BuddhaQuotesDatabase : RoomDatabase() {
 
     @Entity(tableName = "list_quote")
     data class ListQuote(
-        @PrimaryKey val id: Int, // The unique connection id
-        @ColumnInfo(name = "list_id") val listId: Int, // The id of the list
+        @PrimaryKey(autoGenerate = true) val id: Int, // The unique connection id
         @ColumnInfo(name = "quote_id") val quoteId: Int, // The id of the quote
         @ColumnInfo val order: Double, // The order (ASC)
     )
-
 }

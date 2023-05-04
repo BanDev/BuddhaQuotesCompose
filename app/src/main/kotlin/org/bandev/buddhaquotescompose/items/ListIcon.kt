@@ -29,6 +29,5 @@ import org.bandev.buddhaquotescompose.ui.theme.blueAccent
 data class ListIcon(
     val id: Int = 1,
     val imageVector: ImageVector = Icons.Rounded.Subject,
-    val colour: Color = blueAccent,
-    var selected: Boolean = false
+    val colour: Color = blueAccent
 )

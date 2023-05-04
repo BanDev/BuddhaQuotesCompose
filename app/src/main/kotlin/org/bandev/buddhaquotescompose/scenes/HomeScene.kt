@@ -44,15 +44,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlin.random.Random
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
-import org.bandev.buddhaquotescompose.architecture.quotes.QuoteMapper
+import org.bandev.buddhaquotescompose.architecture.quotes.QuoteStore
 import org.bandev.buddhaquotescompose.items.AnimatedHeart
 import org.bandev.buddhaquotescompose.items.Heart
 import org.bandev.buddhaquotescompose.items.QuoteItem
-import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -160,10 +160,10 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                 ) {
                                     IconButton(
                                         onClick = {
-                                            val id = if (quote.id > QuoteMapper.quotes.size) {
-                                                QuoteMapper.quotes.keys.first()
-                                            } else if (quote.id < 1) {
-                                                QuoteMapper.quotes.size
+                                            val id = if (quote.id - 1 > QuoteStore.quotes.size) {
+                                                1
+                                            } else if (quote.id - 1 < 1) {
+                                                QuoteStore.quotes.size
                                             } else {
                                                 quote.id - 1
                                             }
@@ -202,10 +202,10 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                     }
                                     IconButton(
                                         onClick = {
-                                            val id = if (quote.id > QuoteMapper.quotes.size) {
-                                                QuoteMapper.quotes.keys.first()
-                                            } else if (quote.id < 1) {
-                                                QuoteMapper.quotes.size
+                                            val id = if (quote.id + 1 > QuoteStore.quotes.size) {
+                                                1
+                                            } else if (quote.id + 1 < 1) {
+                                                QuoteStore.quotes.size
                                             } else {
                                                 quote.id + 1
                                             }

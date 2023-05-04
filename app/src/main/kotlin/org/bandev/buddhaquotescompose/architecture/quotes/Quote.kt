@@ -3,6 +3,7 @@ package org.bandev.buddhaquotescompose.architecture.quotes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.bandev.buddhaquotescompose.items.QuoteItem
 
 /**
  * A quote in the application.
@@ -19,9 +20,11 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "quote")
 data class Quote(
-    @PrimaryKey val id: Int, // The unique quote id
+    @PrimaryKey(autoGenerate = true) val id: Int, // The unique quote id
     @ColumnInfo(name = "like", defaultValue = "0") var like: Boolean // Is it liked?
     // Each quote doesn't hold its quote!
     // This is pulled from elsewhere in the
     // app to allow for translations to occur.
-)
+) {
+    fun toUIQuote() = QuoteItem(id, QuoteStore.quotes[id - 1], like)
+}

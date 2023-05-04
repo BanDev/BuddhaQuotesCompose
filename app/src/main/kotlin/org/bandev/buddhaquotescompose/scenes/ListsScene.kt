@@ -122,7 +122,7 @@ fun ListsScene(
                         }
                         Column {
                             Text(
-                                text = if (list.id != 0) list.title else stringResource(id = R.string.favourites),
+                                text = if (list.id != 1) list.title else stringResource(id = R.string.favourites),
                                 modifier = Modifier.padding(16.dp),
                                 style = MaterialTheme.typography.titleMedium
                             )
@@ -137,7 +137,7 @@ fun ListsScene(
                                     color = Color.Gray,
                                     style = MaterialTheme.typography.labelLarge
                                 )
-                                if (list.id != 0) {
+                                if (list.id != 1) {
                                     Spacer(Modifier.weight(1f))
                                     IconButton(
                                         onClick = {

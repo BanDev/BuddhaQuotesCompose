@@ -12,7 +12,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
-        setTheme(R.style.Theme_BuddhaQuotesCompose)
 
         setContent {
             BuddhaQuotesApp()

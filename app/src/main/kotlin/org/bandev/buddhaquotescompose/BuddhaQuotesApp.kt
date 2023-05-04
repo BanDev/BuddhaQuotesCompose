@@ -1,6 +1,5 @@
 package org.bandev.buddhaquotescompose
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -28,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,7 +50,7 @@ import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BuddhaQuotesApp() {
+fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
     val settings = SettingsViewModel(LocalContext.current)
     val darkTheme = settings.getThemeLive().toBoolean()
 
@@ -135,7 +133,6 @@ fun BuddhaQuotesApp() {
                                 arguments = listOf(navArgument("listId") { type = NavType.IntType })
                             ) { backStackEntry ->
                                 val listId = backStackEntry.arguments?.getInt("listId") ?: 0
-                                val viewModel = viewModel<BuddhaQuotesViewModel>()
                                 val favourites = stringResource(id = R.string.favourites)
                                 LaunchedEffect(Unit) {
                                     toolbarTitle = if (listId == 0) {
