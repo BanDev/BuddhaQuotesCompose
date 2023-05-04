@@ -1,21 +1,20 @@
 package org.bandev.buddhaquotescompose
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -28,24 +27,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.maxkeppeker.sheets.core.models.base.Header
-import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
-import com.maxkeppeker.sheets.core.utils.BaseConstants
-import com.maxkeppeler.sheets.info.InfoView
-import com.maxkeppeler.sheets.info.models.InfoBody
-import com.maxkeppeler.sheets.info.models.InfoSelection
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.scenes.AboutScene
@@ -57,6 +46,7 @@ import org.bandev.buddhaquotescompose.scenes.MeditateScene
 import org.bandev.buddhaquotescompose.scenes.SettingsScene
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.settings.toBoolean
+import org.bandev.buddhaquotescompose.sheets.QuoteHelpSheet
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 
@@ -76,7 +66,6 @@ fun BuddhaQuotesApp() {
             val currentRoute = navBackStackEntry?.destination?.route ?: Scene.Home.route
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
             val bottomSheetState = rememberModalBottomSheetState()
-            val flowerAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.flower))
 
             Column {
                 ModalNavigationDrawer(
@@ -115,10 +104,12 @@ fun BuddhaQuotesApp() {
                                     }
                                 },
                                 actions = {
-                                    IconButton(
-                                        onClick = { openBottomSheet = !openBottomSheet }
-                                    ) {
-                                        Icon(Icons.Rounded.HelpOutline, contentDescription = null)
+                                    AnimatedVisibility(visible = navController.currentDestination?.route == Scene.Home.route) {
+                                        IconButton(
+                                            onClick = { openBottomSheet = !openBottomSheet }
+                                        ) {
+                                            Icon(Icons.Rounded.HelpOutline, contentDescription = null)
+                                        }
                                     }
                                 },
                                 windowInsets = WindowInsets.statusBars
@@ -143,11 +134,12 @@ fun BuddhaQuotesApp() {
                                 route = "${Scene.InsideList.route}/{listId}",
                                 arguments = listOf(navArgument("listId") { type = NavType.IntType })
                             ) { backStackEntry ->
-                                val listId = backStackEntry.arguments?.getInt("listId")!!
+                                val listId = backStackEntry.arguments?.getInt("listId") ?: 0
                                 val viewModel = viewModel<BuddhaQuotesViewModel>()
+                                val favourites = stringResource(id = R.string.favourites)
                                 LaunchedEffect(Unit) {
                                     toolbarTitle = if (listId == 0) {
-                                        "Favourite"
+                                        favourites
                                     } else {
                                         viewModel.Lists().get(listId).title
                                     }
@@ -167,49 +159,18 @@ fun BuddhaQuotesApp() {
                                 SettingsScene()
                             }
                             composable(Scene.About.route) {
-                                toolbarTitle =  stringResource(R.string.about)
+                                toolbarTitle = stringResource(R.string.about)
                                 AboutScene()
                             }
                         }
-                        if (openBottomSheet) {
+                        if (openBottomSheet && navController.currentDestination?.route == Scene.Home.route) {
                             ModalBottomSheet(
                                 onDismissRequest = { openBottomSheet = false },
                                 sheetState = bottomSheetState
                             ) {
-                                InfoView(
-                                    useCaseState = rememberUseCaseState(),
-                                    selection = InfoSelection(
-                                        negativeButton = null,
-                                        positiveButton = BaseConstants.DEFAULT_POSITIVE_BUTTON,
-                                        onPositiveClick = {
-                                            scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
-                                                if (!bottomSheetState.isVisible) {
-                                                    openBottomSheet = false
-                                                }
-                                            }
-                                        }
-                                    ),
-                                    header = Header.Custom {
-                                        LottieAnimation(
-                                            composition = flowerAnimation,
-                                            modifier = Modifier.height(150.dp)
-                                        )
-                                        Text(
-                                            text = "Quote help",
-                                            modifier = Modifier.padding(16.dp),
-                                            color = MaterialTheme.colorScheme.primary,
-                                            fontWeight = FontWeight.SemiBold,
-                                            style = MaterialTheme.typography.titleLarge,
-                                        )
-                                        Divider()
-                                    },
-                                    body = InfoBody.Default(
-                                        bodyText = """
-                                            You can press the next button or swipe down from the top to get a new quote
-                                            
-                                            You can also change the image at the bottom by holding down on it which will bring up a selection of 16 image options 🤩
-                                        """.trimIndent()
-                                    ),
+                                QuoteHelpSheet(
+                                    sheetState = bottomSheetState,
+                                    onClose = { openBottomSheet = false }
                                 )
                             }
                         }

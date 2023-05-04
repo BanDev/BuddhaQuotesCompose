@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
+import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.BuildConfig
 import org.bandev.buddhaquotescompose.R
@@ -66,7 +67,15 @@ fun AboutScene() {
                     Text(text = BuildConfig.VERSION_NAME)
                 }
             } else if (page == 1) {
-                LibrariesContainer(Modifier.fillMaxSize())
+                LibrariesContainer(
+                    modifier = Modifier.fillMaxSize(),
+                    colors = LibraryDefaults.libraryColors(
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        badgeBackgroundColor = MaterialTheme.colorScheme.primary,
+                        badgeContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
             }
         }
     }

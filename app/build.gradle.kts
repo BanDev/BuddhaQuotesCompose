@@ -96,8 +96,9 @@ dependencies {
     // Sheets - https://github.com/maxkeppeler/sheets-compose-dialogs
     implementation(libs.sheets.core)
     implementation(libs.sheets.duration)
-    implementation(libs.sheets.input)
     implementation(libs.sheets.info)
+    implementation(libs.sheets.input)
+    implementation(libs.sheets.option)
 }
 
 protobuf {

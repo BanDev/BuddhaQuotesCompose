@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package org.bandev.buddhaquotescompose.architecture
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -118,12 +119,13 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
      * some UI elements like title and icon.
      */
 
-    private val _lists = MutableStateFlow<List<ListData>>(emptyList())
-    val lists: StateFlow<List<ListData>> = _lists.asStateFlow()
+    private val _lists = mutableStateListOf<ListData>()
+    val lists: List<ListData> = _lists
 
     init {
         viewModelScope.launch {
-            _lists.value = Lists().getAll().toMutableList()
+            val allLists = Lists().getAll()
+            _lists.addAll(allLists)
         }
     }
 
@@ -154,14 +156,19 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
 
         /** New empty list */
         suspend fun new(title: String): ListData = withContext(Dispatchers.IO) {
-            _lists.new(title).also { this@BuddhaQuotesViewModel._lists.value = this@BuddhaQuotesViewModel._lists.value.plus(ListData(lists.value.size, title)) }
+            _lists.new(title).also {
+                this@BuddhaQuotesViewModel._lists += ListData(
+                    id = generateSequence(1) { it + 1 }.first { it !in lists.map(ListData::id) },
+                    title = title
+                )
+            }
         }
 
         /** Delete a list */
         suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
             if (id != 0) {
                 _lists.delete(id)
-                this@BuddhaQuotesViewModel._lists.value = this@BuddhaQuotesViewModel._lists.value.filterNot { it.id == id }
+                this@BuddhaQuotesViewModel._lists.removeAll { it.id == id }
             }
         }
 
@@ -178,11 +185,7 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         private val listQuotes: Repository.ListQuotes = repository.ListQuotes()
 
         /** Get just one list */
-        fun getFrom(id: Int, after: (quotes: List<QuoteItem>) -> Unit) {
-            viewModelScope.launch(Dispatchers.IO) {
-                after(listQuotes.getFrom(id))
-            }
-        }
+        suspend fun getFrom(id: Int): List<QuoteItem> = listQuotes.getFrom(id)
 
         /** If the quote exists */
         fun exists(quote: QuoteItem, list: ListData, after: (has: Boolean) -> Any) {

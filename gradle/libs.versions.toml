@@ -67,6 +67,7 @@ sheets-core = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.
 sheets-duration = { module = "com.maxkeppeler.sheets-compose-dialogs:duration", version.ref = "sheets" }
 sheets-info = { module = "com.maxkeppeler.sheets-compose-dialogs:info", version.ref = "sheets" }
 sheets-input = { module = "com.maxkeppeler.sheets-compose-dialogs:input", version.ref = "sheets" }
+sheets-option = { module = "com.maxkeppeler.sheets-compose-dialogs:option", version.ref = "sheets" }
 
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }

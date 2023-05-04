@@ -45,7 +45,7 @@ import org.bandev.buddhaquotescompose.ui.theme.yellowAccent
 
 object ListMapper {
 
-    private val listIcons: List<ListIcon> = listOf(
+    val listIcons: List<ListIcon> = listOf(
         ListIcon(0, Icons.Rounded.FavoriteBorder, favourite),
         ListIcon(1, Icons.Rounded.Subject, blueAccent),
         ListIcon(2, Icons.Rounded.HistoryEdu, greenAccent),

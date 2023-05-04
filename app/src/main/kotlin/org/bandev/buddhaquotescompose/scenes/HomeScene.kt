@@ -44,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlin.random.Random
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.FavoriteButton
 import org.bandev.buddhaquotescompose.R
@@ -53,6 +52,7 @@ import org.bandev.buddhaquotescompose.architecture.quotes.QuoteMapper
 import org.bandev.buddhaquotescompose.items.AnimatedHeart
 import org.bandev.buddhaquotescompose.items.Heart
 import org.bandev.buddhaquotescompose.items.QuoteItem
+import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -233,17 +233,15 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
     }
 }
 
-fun Context.shareQuote(quote: QuoteItem) {
-    Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(
-            Intent.EXTRA_TEXT,
-            """
-                ${getString(quote.resource)}
-                
-                ${getString(R.string.attribution_buddha)}
-            """.trimIndent()
-        )
-        type = "text/plain"
-    }.let { startActivity(Intent.createChooser(it, null)) }
-}
+fun Context.shareQuote(quote: QuoteItem) = Intent().apply {
+    action = Intent.ACTION_SEND
+    putExtra(
+        Intent.EXTRA_TEXT,
+        """
+            ${getString(quote.resource)}
+            
+            ${getString(R.string.attribution_buddha)}
+        """.trimIndent()
+    )
+    type = "text/plain"
+}.let { startActivity(Intent.createChooser(it, null)) }
