@@ -14,7 +14,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -161,15 +160,10 @@ fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
                             }
                         }
                         if (openBottomSheet && navController.currentDestination?.route == Scene.Home.route) {
-                            ModalBottomSheet(
-                                onDismissRequest = { openBottomSheet = false },
-                                sheetState = bottomSheetState
-                            ) {
-                                QuoteHelpSheet(
-                                    sheetState = bottomSheetState,
-                                    onClose = { openBottomSheet = false }
-                                )
-                            }
+                            QuoteHelpSheet(
+                                sheetState = bottomSheetState,
+                                onClose = { openBottomSheet = false }
+                            )
                         }
                     }
                 }

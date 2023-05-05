@@ -18,6 +18,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FormatListBulleted
+import androidx.compose.material.icons.filled.FormatQuote
+import androidx.compose.material.icons.filled.SelfImprovement
+import androidx.compose.material.icons.outlined.FormatListBulleted
+import androidx.compose.material.icons.outlined.FormatQuote
+import androidx.compose.material.icons.outlined.SelfImprovement
 import androidx.compose.material.icons.rounded.AddCircleOutline
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
@@ -25,10 +31,9 @@ import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -66,15 +71,15 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
 
     Scaffold(
         bottomBar = {
-            TabRow(selectedTabIndex = pagerState.currentPage) {
-                listOf("Quotes", "Lists", "Meditation").forEachIndexed { index, title ->
-                    Tab(
-                        text = {
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
-                        },
+            NavigationBar {
+                listOf(
+                    Triple("Quotes", Icons.Filled.FormatQuote, Icons.Outlined.FormatQuote),
+                    Triple("Lists", Icons.Filled.FormatListBulleted, Icons.Outlined.FormatListBulleted),
+                    Triple("Meditation", Icons.Filled.SelfImprovement, Icons.Outlined.SelfImprovement)
+                ).forEachIndexed { index, (label, iconFilled, iconOutlined) ->
+                    NavigationBarItem(
+                        icon = { Icon(if (pagerState.currentPage == index) iconFilled else iconOutlined, contentDescription = label) },
+                        label = { Text(label) },
                         selected = pagerState.currentPage == index,
                         onClick = {
                             scope.launch {

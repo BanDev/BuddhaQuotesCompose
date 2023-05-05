@@ -101,7 +101,7 @@ class Repository(application: Application) {
                 Quotes().getLiked()
             } else {
                 dao.getFrom(id).map { listQuote ->
-                    database.quote().get(listQuote.quoteId).toUIQuote()
+                    database.quote().get(listQuote.id).toUIQuote()
                 }
             }
         }
@@ -110,21 +110,15 @@ class Repository(application: Application) {
         suspend fun has(quoteId: Int, listId: Int): Boolean = dao.has(quoteId, listId) == 1
 
         /** Add a quote to a list */
-        suspend fun addTo(id: Int, quote: QuoteItem) {
-            if (id == 1) return Quotes().like(quote.id)
-            dao.addTo(id, quote.id, count(id).toDouble())
-        }
-
-        /** Add a quote to a list from just quote id */
-        suspend fun addTo(listId: Int, quoteId: Int) {
-            if (listId == 1) return Quotes().like(quoteId)
-            dao.addTo(listId, quoteId, count(listId).toDouble())
+        suspend fun addTo(listId: Int, quote: QuoteItem) {
+            if (listId == 1) return Quotes().like(quote.id)
+            dao.add(BuddhaQuotesDatabase.ListQuote(listId, quote.id))
         }
 
         /** Remove a quote from a list */
-        suspend fun removeFrom(id: Int, quote: QuoteItem) {
-            if (id == 1) return database.quote().unlike(quote.id)
-            dao.removeFrom(id, quote.id)
+        suspend fun removeFrom(listId: Int, quote: QuoteItem) {
+            if (listId == 1) return database.quote().unlike(quote.id)
+            dao.removeFrom(BuddhaQuotesDatabase.ListQuote(listId, quote.id))
         }
 
         /** Count the quotes in a list */

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,6 @@ import org.bandev.buddhaquotescompose.architecture.quotes.QuoteStore
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.QuoteItem
-import java.util.Calendar
 
 /**
  * A level of abstraction between the ui
@@ -175,13 +175,6 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         fun addTo(id: Int, quote: QuoteItem) {
             viewModelScope.launch(Dispatchers.IO) {
                 listQuotes.addTo(id, quote)
-            }
-        }
-
-        /** Add a quote to a list from just quote id */
-        fun addTo(listId: Int, quoteId: Int) {
-            viewModelScope.launch(Dispatchers.IO) {
-                listQuotes.addTo(listId, quoteId)
             }
         }
 

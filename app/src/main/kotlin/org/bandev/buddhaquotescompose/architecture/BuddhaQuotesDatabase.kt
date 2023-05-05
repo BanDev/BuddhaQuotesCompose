@@ -58,44 +58,37 @@ abstract class BuddhaQuotesDatabase : RoomDatabase() {
     interface ListQuoteDao {
 
         /** Get every single quote from a list */
-        @Query("SELECT * FROM list_quote WHERE id = :listId ORDER BY `order` ASC")
+        @Query("SELECT * FROM list_quote WHERE list_id = :listId")
         suspend fun getFrom(listId: Int): MutableList<ListQuote>
 
         /** Count the quotes in a list */
-        @Query("SELECT COUNT(id) FROM list_quote WHERE `id` = :listId AND `quote_id` = :quoteId")
+        @Query("SELECT COUNT(id) FROM list_quote WHERE `list_id` = :listId AND `id` = :quoteId")
         suspend fun has(quoteId: Int, listId: Int): Int
 
         /** Add a quote to a list */
-        @Query("INSERT INTO list_quote (`id`, `quote_id`, `order`) VALUES (:listId, :quoteId, :order)")
-        suspend fun addTo(listId: Int, quoteId: Int, order: Double)
+        @Insert
+        suspend fun add(listQuote: ListQuote)
 
         /** Remove a quote from a list */
-        @Query("DELETE FROM list_quote WHERE `id` = :listId AND `quote_id` = :quoteId")
-        suspend fun removeFrom(listId: Int, quoteId: Int)
+        @Delete
+        suspend fun removeFrom(listQuote: ListQuote)
 
         /** Count the quotes in a list */
-        @Query("SELECT COUNT(id) FROM list_quote WHERE `id` = :listId")
+        @Query("SELECT COUNT(id) FROM list_quote WHERE `list_id` = :listId")
         suspend fun count(listId: Int): Int
+
+        @Transaction
+        suspend fun addQuoteToList(listId: Int, quoteId: Int) {
+            add(ListQuote(listId, quoteId))
+        }
     }
 
-    /**
-     * So that we can place quotes in the order,
-     * that they were added, a custom Many <-> Many
-     * solution is required.
-     *
-     * ListQuote should never be exposed to UI levels
-     * and links together quotes and their lists with
-     * also an ordering number.
-     *
-     * When defining an order, remember that bigger
-     * numbers are shown last and you can use decimal
-     * values.
-     */
-
-    @Entity(tableName = "list_quote")
+    @Entity(
+        tableName = "list_quote",
+        primaryKeys = ["list_id", "id"]
+    )
     data class ListQuote(
-        @PrimaryKey(autoGenerate = true) val id: Int, // The unique connection id
-        @ColumnInfo(name = "quote_id") val quoteId: Int, // The id of the quote
-        @ColumnInfo val order: Double, // The order (ASC)
+        @ColumnInfo(name = "list_id") val listId: Int,
+        val id: Int
     )
 }
