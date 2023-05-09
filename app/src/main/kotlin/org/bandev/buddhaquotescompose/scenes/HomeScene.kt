@@ -94,6 +94,7 @@ fun HomeScene(navController: NavController, viewModel: BuddhaQuotesViewModel = v
     ) { paddingValues ->
         HorizontalPager(
             pageCount = 3,
+            beyondBoundsPageCount = 2,
             modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             state = pagerState
         ) { page ->
