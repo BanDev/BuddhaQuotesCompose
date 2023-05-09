@@ -49,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import kotlin.random.Random
 import kotlinx.coroutines.launch
 import org.bandev.buddhaquotescompose.FavoriteButton
@@ -61,7 +62,7 @@ import org.bandev.buddhaquotescompose.items.QuoteItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
+fun HomeScene(navController: NavController, viewModel: BuddhaQuotesViewModel = viewModel()) {
     val quote by viewModel.selectedQuote.collectAsStateWithLifecycle(QuoteItem())
     val context = LocalContext.current
     val pagerState = rememberPagerState()
@@ -107,7 +108,9 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                                         if (!quote.isLiked) {
                                             scope.launch {
                                                 viewModel.toggleLikedOnSelectedQuote()
-                                                viewModel.Quotes().setLike(quote.id, !quote.isLiked)
+                                                viewModel
+                                                    .Quotes()
+                                                    .setLike(quote.id, !quote.isLiked)
                                             }
                                         }
                                         hearts += Heart(
@@ -229,9 +232,7 @@ fun HomeScene(viewModel: BuddhaQuotesViewModel = viewModel()) {
                         }
                     }
                 }
-                1 -> Column(Modifier.fillMaxSize()) {
-                    Text(text = "Page $page")
-                }
+                1 -> ListsScene(navController = navController)
                 else -> MeditateScene()
             }
         }

@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +15,7 @@ import org.bandev.buddhaquotescompose.architecture.quotes.QuoteStore
 import org.bandev.buddhaquotescompose.items.ListData
 import org.bandev.buddhaquotescompose.items.ListIcon
 import org.bandev.buddhaquotescompose.items.QuoteItem
+import java.util.Calendar
 
 /**
  * A level of abstraction between the ui
@@ -93,20 +93,12 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Interact with the list table of the
-     * database to allow for adding or removing
-     * list records and renaming and updating
-     * some UI elements like title and icon.
-     */
-
     private val _lists = mutableStateListOf<ListData>()
     val lists: List<ListData> = _lists
 
     init {
         viewModelScope.launch {
-            val allLists = Lists().getAll()
-            _lists.addAll(allLists)
+            _lists += Lists().getAll()
         }
     }
 
@@ -130,9 +122,9 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
         }
 
         /** Update a list's icon */
-        suspend fun updateIcon(id: Int, icon: ListIcon): ListData = withContext(Dispatchers.IO) {
-            _lists.updateIcon(id, icon)
-            _lists.get(id)
+        suspend fun updateIcon(listId: Int, icon: ListIcon): ListData = withContext(Dispatchers.IO) {
+            _lists.updateIcon(listId, icon)
+            _lists.get(listId)
         }
 
         /** New empty list */
@@ -150,12 +142,6 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
-
-    /**
-     * Interact with the database's record
-     * linking table to add, remove and count
-     * up all of the quotes that a list has.
-     */
 
     inner class ListQuotes {
 
@@ -191,7 +177,5 @@ class BuddhaQuotesViewModel(application: Application) : AndroidViewModel(applica
                 after(listQuotes.count(id))
             }
         }
-
     }
-
 }

@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
@@ -45,11 +47,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.maxkeppeker.sheets.core.models.base.Header
 import com.maxkeppeker.sheets.core.models.base.IconSource
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.input.InputView
@@ -191,52 +193,97 @@ fun ListsScene(
                 onDismissRequest = { listOptionsBottomSheetVisible = false },
                 sheetState = bottomSheetState
             ) {
-                OptionView(
-                    useCaseState = rememberUseCaseState(),
-                    selection = OptionSelection.Single(
-                        options = ListMapper.listIcons.map {
-                            Option(
-                                icon = IconSource(it.imageVector),
-                                titleText = it.imageVector.name.substringAfterLast('.')
-                            )
-                        },
-                        onNegativeClick = {
+                var isRename by remember { mutableStateOf(false) }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
                             scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
                                 if (!bottomSheetState.isVisible) {
                                     listOptionsBottomSheetVisible = false
                                 }
                             }
                         }
-                    ) { index, option ->
-
-                    },
-                    config = OptionConfig(mode = DisplayMode.GRID_HORIZONTAL),
-                    header = Header.Custom {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    scope.launch {
-                                        viewModel.Lists().delete(listId)
-                                        bottomSheetState.hide()
-                                    }.invokeOnCompletion {
-                                        if (!bottomSheetState.isVisible) {
-                                            listOptionsBottomSheetVisible = false
-                                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.KeyboardArrowDown,
+                            contentDescription = null
+                        )
+                    }
+                    Text(
+                        text = if (isRename) "Rename list" else "List options",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Row {
+                        IconButton(onClick = { isRename = true }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Edit,
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    viewModel.Lists().delete(listId)
+                                    bottomSheetState.hide()
+                                }.invokeOnCompletion {
+                                    if (!bottomSheetState.isVisible) {
+                                        listOptionsBottomSheetVisible = false
                                     }
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Delete,
-                                    contentDescription = null
-                                )
                             }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
                         }
                     }
-                )
+                }
+                Divider()
+                if (isRename) {
+                    InputView(
+                        useCaseState = rememberUseCaseState(),
+                        selection = InputSelection(input = listOf())
+                    )
+                } else {
+                    OptionView(
+                        useCaseState = rememberUseCaseState(),
+                        selection = OptionSelection.Single(
+                            options = ListMapper.listIcons.map {
+                                Option(
+                                    icon = IconSource(it.imageVector),
+                                    titleText = it.imageVector.name.substringAfterLast('.')
+                                )
+                            },
+                            onNegativeClick = {
+                                scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
+                                    if (!bottomSheetState.isVisible) {
+                                        listOptionsBottomSheetVisible = false
+                                    }
+                                }
+                            }
+                        ) { index, option ->
+                            scope.launch {
+                                bottomSheetState.hide()
+                                viewModel.lists.find { it.id == listId }
+                                viewModel.Lists().updateIcon(listId, ListMapper.listIcons[index])
+                            }.invokeOnCompletion {
+                                if (!bottomSheetState.isVisible) {
+                                    listOptionsBottomSheetVisible = false
+                                }
+                            }
+                        },
+                        config = OptionConfig(mode = DisplayMode.GRID_HORIZONTAL)
+                    )
+                }
             }
         }
     }

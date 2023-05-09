@@ -1,5 +1,6 @@
 package org.bandev.buddhaquotescompose
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -64,6 +65,12 @@ fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
             var openBottomSheet by rememberSaveable { mutableStateOf(false) }
             val bottomSheetState = rememberModalBottomSheetState()
 
+            BackHandler(enabled = drawerState.isOpen) {
+                scope.launch {
+                    drawerState.close()
+                }
+            }
+
             Column {
                 ModalNavigationDrawer(
                     drawerContent = {
@@ -121,7 +128,7 @@ fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
                         ) {
                             composable(Scene.Home.route) {
                                 toolbarTitle = stringResource(R.string.app_name)
-                                HomeScene()
+                                HomeScene(navController = navController)
                             }
                             composable(Scene.Lists.route) {
                                 toolbarTitle = stringResource(R.string.your_lists)
