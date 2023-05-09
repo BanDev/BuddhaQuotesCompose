@@ -17,7 +17,7 @@ material3 = "1.1.0-rc01"
 navigation = "2.5.3"
 protobuf = "3.23.0"
 protobufPlugin = "0.9.3"
-settings = "0.26.0"
+settings = "0.27.0"
 sheets = "1.1.1"
 room = "2.5.1"
 
