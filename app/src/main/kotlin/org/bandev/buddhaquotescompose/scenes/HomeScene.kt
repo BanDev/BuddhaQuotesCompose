@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatListBulleted
@@ -62,10 +63,9 @@ import org.bandev.buddhaquotescompose.items.QuoteItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScene(navController: NavController, viewModel: BuddhaQuotesViewModel = viewModel()) {
+fun HomeScene(navController: NavController, pagerState: PagerState, viewModel: BuddhaQuotesViewModel = viewModel()) {
     val quote by viewModel.selectedQuote.collectAsStateWithLifecycle(QuoteItem())
     val context = LocalContext.current
-    val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
     val hearts = remember { mutableStateListOf<Heart>() }

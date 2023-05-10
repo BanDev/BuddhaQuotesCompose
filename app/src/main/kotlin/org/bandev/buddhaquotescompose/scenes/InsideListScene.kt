@@ -73,7 +73,7 @@ import org.bandev.buddhaquotescompose.R
 import org.bandev.buddhaquotescompose.architecture.BuddhaQuotesViewModel
 import org.bandev.buddhaquotescompose.items.QuoteItem
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsideListScene(listId: Int, viewModel: BuddhaQuotesViewModel = viewModel()) {
     val quotes = remember { mutableStateListOf<QuoteItem>() }

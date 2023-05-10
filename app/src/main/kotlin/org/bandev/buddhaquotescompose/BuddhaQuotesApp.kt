@@ -2,12 +2,14 @@ package org.bandev.buddhaquotescompose
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.Menu
@@ -44,11 +46,13 @@ import org.bandev.buddhaquotescompose.scenes.MeditateScene
 import org.bandev.buddhaquotescompose.scenes.SettingsScene
 import org.bandev.buddhaquotescompose.settings.SettingsViewModel
 import org.bandev.buddhaquotescompose.settings.toBoolean
+import org.bandev.buddhaquotescompose.sheets.ListHelpSheet
+import org.bandev.buddhaquotescompose.sheets.MeditateHelpSheet
 import org.bandev.buddhaquotescompose.sheets.QuoteHelpSheet
 import org.bandev.buddhaquotescompose.ui.theme.BuddhaQuotesComposeTheme
 import org.bandev.buddhaquotescompose.ui.theme.EdgeToEdgeContent
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
     val settings = SettingsViewModel(LocalContext.current)
@@ -121,6 +125,7 @@ fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
                             )
                         }
                     ) { paddingValues ->
+                        val pagerState = rememberPagerState()
                         NavHost(
                             navController = navController,
                             startDestination = Scene.Home.route,
@@ -128,7 +133,7 @@ fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
                         ) {
                             composable(Scene.Home.route) {
                                 toolbarTitle = stringResource(R.string.app_name)
-                                HomeScene(navController = navController)
+                                HomeScene(navController = navController, pagerState = pagerState)
                             }
                             composable(Scene.Lists.route) {
                                 toolbarTitle = stringResource(R.string.your_lists)
@@ -167,10 +172,20 @@ fun BuddhaQuotesApp(viewModel: BuddhaQuotesViewModel = viewModel()) {
                             }
                         }
                         if (openBottomSheet && navController.currentDestination?.route == Scene.Home.route) {
-                            QuoteHelpSheet(
-                                sheetState = bottomSheetState,
-                                onClose = { openBottomSheet = false }
-                            )
+                            when (pagerState.currentPage) {
+                                0 -> QuoteHelpSheet(
+                                    sheetState = bottomSheetState,
+                                    onClose = { openBottomSheet = false }
+                                )
+                                1 -> ListHelpSheet(
+                                    sheetState = bottomSheetState,
+                                    onClose = { openBottomSheet = false }
+                                )
+                                2 -> MeditateHelpSheet(
+                                    sheetState = bottomSheetState,
+                                    onClose = { openBottomSheet = false }
+                                )
+                            }
                         }
                     }
                 }
